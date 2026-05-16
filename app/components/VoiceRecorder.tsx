@@ -160,7 +160,12 @@ export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
               <TouchableOpacity onPress={reset} style={[styles.confirmBtn, styles.cancelBtn]}>
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => confirmTranscript(editedTranscript)} style={styles.confirmBtn}>
+              <TouchableOpacity onPress={() => {
+                confirmTranscript(editedTranscript, {
+                  userTime: new Date().toISOString(),
+                  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                });
+              }} style={styles.confirmBtn}>
                 <Text style={styles.confirmText}>Confirm</Text>
               </TouchableOpacity>
             </View>

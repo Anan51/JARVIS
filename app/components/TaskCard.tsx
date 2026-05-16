@@ -9,7 +9,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Task } from '../types';
@@ -28,14 +27,7 @@ export function TaskCard({ task, onComplete, onDelete, onSendMessage }: TaskCard
   const isNotified = task.status === 'notified' || task.status === 'sent';
 
   const handleDelete = () => {
-    Alert.alert(
-      'Delete Task',
-      `Are you sure you want to delete "${task.title}"?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => onDelete(task.taskId) },
-      ]
-    );
+    onDelete(task.taskId);
   };
 
   const getStatusBadge = () => {

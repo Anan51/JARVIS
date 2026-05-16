@@ -57,11 +57,11 @@ export const handler = async (event: S3Event | ApiEvent) => {
   }
 };
 
-async function processTranscriptAndCreateTasks(userId: string, memoId: string, transcript: string) {
+async function processTranscriptAndCreateTasks(userId: string, memoId: string, transcript: string, userTime?: string, timezone?: string) {
   await updateMemo(userId, memoId, { status: 'analyzing', transcript });
 
-  const currentTime = new Date().toISOString();
-  const intents = await analyzeTranscript(transcript, currentTime);
+  const currentTime = userTime || new Date().toISOString();
+  const intents = await analyzeTranscript(transcript, currentTime, timezone);
   console.log(`Parsed intents:`, JSON.stringify(intents));
 
   const createdTasks = [];
@@ -107,12 +107,14 @@ async function handleApiEvent(event: ApiEvent) {
     const memoId = event.pathParameters.memoId;
     const body = JSON.parse(event.body || '{}');
     const transcript = body.transcript;
+    const userTime = body.userTime;
+    const timezone = body.timezone;
 
     if (!transcript) {
       return { statusCode: 400, body: JSON.stringify({ message: 'Missing transcript' }) };
     }
 
-    const result = await processTranscriptAndCreateTasks(userId, memoId, transcript);
+    const result = await processTranscriptAndCreateTasks(userId, memoId, transcript, userTime, timezone);
 
     return {
       statusCode: 200,

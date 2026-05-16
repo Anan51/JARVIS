@@ -12,7 +12,7 @@ const client = new BedrockRuntimeClient({
   region: process.env.AWS_REGION || 'us-east-1',
 });
 
-const MODEL_ID = process.env.BEDROCK_MODEL_ID || 'meta.llama3-8b-instruct-v1:0';
+const MODEL_ID = process.env.BEDROCK_MODEL_ID || 'google.gemma-3-4b-it';
 
 const SYSTEM_PROMPT = `You are JARVIS, an intelligent voice assistant that parses natural language voice commands into structured, actionable items.
 
@@ -24,7 +24,7 @@ Given a transcript of a user's voice memo, extract ALL actionable items. Each it
 4. **task** — A general to-do item without a specific time trigger (e.g., "Add buy groceries to my list")
 
 For time references:
-- Convert relative times (e.g., "in 30 minutes", "tomorrow at 3pm") to absolute ISO 8601 datetime strings based on the current time provided.
+- Convert relative times (e.g., "in 30 minutes", "tomorrow at 3pm") to absolute ISO 8601 datetime strings. You MUST append the correct timezone offset from the context (e.g. "-07:00") instead of using "Z" (UTC), so the server accurately maps local time.
 - If no specific time is mentioned for a task, omit the scheduledTime field.
 - For recurring items (e.g., "every morning at 7am"), set recurring to true and provide a cron expression.
 
@@ -46,9 +46,25 @@ Return ONLY a valid JSON array of objects. No markdown, no explanation, no wrapp
 
 export async function analyzeTranscript(
   transcript: string,
-  currentTime: string
+  currentTime: string,
+  timezone?: string
 ): Promise<ParsedIntent[]> {
-  const userMessage = `Current date/time: ${currentTime}
+  let dateTimeContext = currentTime;
+  
+  if (timezone) {
+    try {
+      dateTimeContext = new Date(currentTime).toLocaleString("en-US", {
+        timeZone: timezone,
+        timeZoneName: 'shortOffset',
+        weekday: 'long', year: 'numeric', month: 'long',
+        day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+    } catch (e) {
+      console.warn("Invalid timezone or date, falling back to raw time");
+    }
+  }
+
+  const userMessage = `Current date/time: ${dateTimeContext}
 
 Transcript:
 "${transcript}"
@@ -85,7 +101,7 @@ Parse this transcript and return the JSON array of actionable items.`;
 
   try {
     const intents: ParsedIntent[] = JSON.parse(jsonStr);
-    
+
     // Validate and sanitize each intent
     return intents.map((intent) => ({
       type: validateTaskType(intent.type),
