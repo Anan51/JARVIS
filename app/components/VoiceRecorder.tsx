@@ -147,10 +147,6 @@ export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
           </View>
         )}
 
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
-
         {state === 'pending_confirmation' && (
           <View style={styles.confirmationContainer}>
             <Text style={styles.confirmationTitle}>Did you mean:</Text>
@@ -185,10 +181,10 @@ export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
                   intent.type === 'alarm'
                     ? 'alarm'
                     : intent.type === 'reminder'
-                    ? 'notifications'
-                    : intent.type === 'message'
-                    ? 'chatbubble'
-                    : 'checkmark-circle'
+                      ? 'notifications'
+                      : intent.type === 'message'
+                        ? 'chatbubble'
+                        : 'checkmark-circle'
                 }
                 size={16}
                 color={theme.colors.primary}
