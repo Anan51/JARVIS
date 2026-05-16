@@ -1,0 +1,41 @@
+"use strict";var O=Object.create;var f=Object.defineProperty;var x=Object.getOwnPropertyDescriptor;var _=Object.getOwnPropertyNames;var R=Object.getPrototypeOf,C=Object.prototype.hasOwnProperty;var N=(e,t)=>{for(var n in t)f(e,n,{get:t[n],enumerable:!0})},S=(e,t,n,o)=>{if(t&&typeof t=="object"||typeof t=="function")for(let r of _(t))!C.call(e,r)&&r!==n&&f(e,r,{get:()=>t[r],enumerable:!(o=x(t,r))||o.enumerable});return e};var D=(e,t,n)=>(n=e!=null?O(R(e)):{},S(t||!e||!e.__esModule?f(n,"default",{value:e,enumerable:!0}):n,e)),U=e=>S(f({},"__esModule",{value:!0}),e);var te={};N(te,{handler:()=>W});module.exports=U(te);var p=require("@aws-sdk/client-transcribe"),y=require("@aws-sdk/client-scheduler"),v=require("@aws-sdk/client-s3"),k=require("crypto");var T=require("@aws-sdk/client-bedrock-runtime"),$=new T.BedrockRuntimeClient({region:process.env.AWS_REGION||"us-east-1"}),B=process.env.BEDROCK_MODEL_ID||"meta.llama3-8b-instruct-v1:0",M=`You are JARVIS, an intelligent voice assistant that parses natural language voice commands into structured, actionable items.
+
+Given a transcript of a user's voice memo, extract ALL actionable items. Each item must be classified into one of these types:
+
+1. **alarm** \u2014 Setting a time-based alarm (e.g., "Set an alarm for 7am")
+2. **reminder** \u2014 A reminder to do something at/by a certain time (e.g., "Remind me to finish the report by 5pm")
+3. **message** \u2014 Sending a text message to someone (e.g., "Text Mom that I'll be late")
+4. **task** \u2014 A general to-do item without a specific time trigger (e.g., "Add buy groceries to my list")
+
+For time references:
+- Convert relative times (e.g., "in 30 minutes", "tomorrow at 3pm") to absolute ISO 8601 datetime strings based on the current time provided.
+- If no specific time is mentioned for a task, omit the scheduledTime field.
+- For recurring items (e.g., "every morning at 7am"), set recurring to true and provide a cron expression.
+
+For messages:
+- Extract the recipient name exactly as spoken.
+- Extract the message body \u2014 what should be sent to the recipient.
+
+Return ONLY a valid JSON array of objects. No markdown, no explanation, no wrapping. Each object must have:
+{
+  "type": "alarm" | "reminder" | "message" | "task",
+  "title": "short descriptive title",
+  "description": "full details",
+  "scheduledTime": "ISO 8601 datetime or null",
+  "recipient": "name or null",
+  "messageBody": "content to send or null",
+  "recurring": false,
+  "recurringPattern": "cron expression or null"
+}`;async function E(e,t){let n=`Current date/time: ${t}
+
+Transcript:
+"${e}"
+
+Parse this transcript and return the JSON array of actionable items.`,r={prompt:`<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+
+${M}<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+${n}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+
+`,max_gen_len:2048,temperature:.1,top_p:.9},i=new T.InvokeModelCommand({modelId:B,contentType:"application/json",body:JSON.stringify(r)}),s=await $.send(i),c=JSON.parse(new TextDecoder().decode(s.body)).generation??"",d=c.trim();d.startsWith("```")&&(d=d.replace(/^```(?:json)?\n?/,"").replace(/\n?```$/,""));try{return JSON.parse(d).map(u=>({type:L(u.type),title:String(u.title||"Untitled"),description:String(u.description||""),scheduledTime:u.scheduledTime||void 0,recipient:u.recipient||void 0,messageBody:u.messageBody||void 0,recurring:!!u.recurring,recurringPattern:u.recurringPattern||void 0}))}catch(l){throw console.error("Failed to parse Bedrock response:",c),new Error(`Failed to parse AI response: ${l}`)}}function L(e){return["alarm","reminder","message","task"].includes(e)?e:"task"}var m=require("@aws-sdk/client-dynamodb"),w=require("@aws-sdk/util-dynamodb"),b=new m.DynamoDBClient({}),J=process.env.TASKS_TABLE,K=process.env.MEMOS_TABLE,oe=process.env.PUSH_TOKENS_TABLE;async function j(e,t){await b.send(new m.PutItemCommand({TableName:e,Item:(0,w.marshall)(t,{removeUndefinedValues:!0})}))}async function A(e){await j(J,e)}async function g(e,t,n){let o=[],r={},i={};Object.entries(n).forEach(([s,a],c)=>{let d=`#field${c}`,l=`:val${c}`;o.push(`${d} = ${l}`),r[d]=s,i[l]=a}),o.push("#updatedAt = :updatedAt"),r["#updatedAt"]="updatedAt",i[":updatedAt"]=new Date().toISOString(),await b.send(new m.UpdateItemCommand({TableName:K,Key:(0,w.marshall)({userId:e,memoId:t}),UpdateExpression:`SET ${o.join(", ")}`,ExpressionAttributeNames:r,ExpressionAttributeValues:(0,w.marshall)(i,{removeUndefinedValues:!0})}))}var I=new p.TranscribeClient({}),F=new y.SchedulerClient({}),G=new v.S3Client({}),me=process.env.AUDIO_BUCKET,P=process.env.AUDIO_BUCKET,z=process.env.NOTIFICATION_LAMBDA_ARN,H=process.env.SCHEDULER_ROLE_ARN,V=process.env.SCHEDULER_GROUP||"jarvis-schedules",W=async e=>"httpMethod"in e?Y(e):Q(e);async function q(e,t,n){await g(e,t,{status:"analyzing",transcript:n});let o=new Date().toISOString(),r=await E(n,o);console.log("Parsed intents:",JSON.stringify(r));let i=[];for(let s of r){let a=(0,k.randomUUID)(),c={userId:e,taskId:a,memoId:t,type:s.type,title:s.title,description:s.description,status:"pending",scheduledTime:s.scheduledTime,recipient:s.recipient,messageBody:s.messageBody,recurring:s.recurring,recurringPattern:s.recurringPattern,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};if(s.scheduledTime&&(s.type==="alarm"||s.type==="reminder")){let d=await X(e,a,s);c.schedulerArn=d}await A(c),i.push(c)}return await g(e,t,{status:"complete",intents:r}),{intents:r,tasks:i}}async function Y(e){try{let t=e.requestContext.authorizer.claims.sub,n=e.pathParameters.memoId,r=JSON.parse(e.body||"{}").transcript;if(!r)return{statusCode:400,body:JSON.stringify({message:"Missing transcript"})};let i=await q(t,n,r);return{statusCode:200,headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify({message:"Success",...i})}}catch(t){return console.error("API Error:",t),{statusCode:500,headers:{"Access-Control-Allow-Origin":"*"},body:JSON.stringify({message:"Internal error"})}}}async function Q(e){for(let t of e.Records){let n=t.s3.bucket.name,o=decodeURIComponent(t.s3.object.key.replace(/\+/g," "));console.log(`Processing audio file: s3://${n}/${o}`);let r=o.split("/");if(r.length<3)continue;let i=r[1],s=r[2].replace(".webm","");try{await g(i,s,{status:"transcribing"});let a=await Z(n,o,s);console.log(`Transcript: ${a}`),await g(i,s,{status:"pending_confirmation",transcript:a}),console.log(`Memo ${s} is pending confirmation.`)}catch(a){console.error(`Error processing memo ${s}:`,a),await g(i,s,{status:"failed"}).catch(()=>{})}}}async function Z(e,t,n){let o=`jarvis-${n}-${Date.now()}`,r=`s3://${e}/${t}`,i=`transcripts/${n}.json`;await I.send(new p.StartTranscriptionJobCommand({TranscriptionJobName:o,LanguageCode:"en-US",MediaFormat:"webm",Media:{MediaFileUri:r},OutputBucketName:P,OutputKey:i}));let s,a=0,c=60;for(;a<c;){if(await ee(5e3),a++,s=(await I.send(new p.GetTranscriptionJobCommand({TranscriptionJobName:o}))).TranscriptionJob?.TranscriptionJobStatus,console.log(`Transcription status (attempt ${a}): ${s}`),s===p.TranscriptionJobStatus.COMPLETED){let{GetObjectCommand:l}=await import("@aws-sdk/client-s3"),h=await(await G.send(new l({Bucket:P,Key:i}))).Body?.transformToString();if(!h)throw new Error("Empty transcript body");return JSON.parse(h).results?.transcripts?.[0]?.transcript??""}if(s===p.TranscriptionJobStatus.FAILED)throw new Error(`Transcription failed for job ${o}`)}throw new Error(`Transcription timed out after ${c*5}s`)}async function X(e,t,n){let o=`jarvis-${t}`,r=new Date(n.scheduledTime);if(r<=new Date)return console.warn(`Scheduled time ${n.scheduledTime} is in the past, skipping schedule`),"";let i={Name:o,GroupName:V,ScheduleExpression:n.recurring&&n.recurringPattern?`cron(${n.recurringPattern})`:`at(${r.toISOString().replace(/\.\d{3}Z$/,"")})`,ScheduleExpressionTimezone:"UTC",FlexibleTimeWindow:{Mode:y.FlexibleTimeWindowMode.OFF},Target:{Arn:z,RoleArn:H,Input:JSON.stringify({userId:e,taskId:t,type:n.type,title:n.title,description:n.description})},...n.recurring?{}:{ActionAfterCompletion:"DELETE"}};return await F.send(new y.CreateScheduleCommand(i)),o}function ee(e){return new Promise(t=>setTimeout(t,e))}0&&(module.exports={handler});
+//# sourceMappingURL=index.js.map

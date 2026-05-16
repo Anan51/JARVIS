@@ -719,7 +719,7 @@
        "Ref": "JarvisAudioBucketA3CB9231"
       },
       "SCHEDULER_GROUP": "jarvis-schedules",
-      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+      "BEDROCK_MODEL_ID": "meta.llama3-8b-instruct-v1:0"
      }
     },
     "FunctionName": "jarvis-notification-sender",
@@ -933,7 +933,7 @@
        "Ref": "JarvisAudioBucketA3CB9231"
       },
       "SCHEDULER_GROUP": "jarvis-schedules",
-      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+      "BEDROCK_MODEL_ID": "meta.llama3-8b-instruct-v1:0"
      }
     },
     "FunctionName": "jarvis-memo-upload",
@@ -1107,7 +1107,10 @@
       {
        "Action": "bedrock:InvokeModel",
        "Effect": "Allow",
-       "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0"
+       "Resource": [
+        "arn:aws:bedrock:*:381491991730:inference-profile/*",
+        "arn:aws:bedrock:*::foundation-model/*"
+       ]
       },
       {
        "Action": "scheduler:CreateSchedule",
@@ -1143,7 +1146,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-381491991730-us-east-1",
-     "S3Key": "0aff6ff8ca64f71cb0cfc8ffc0c2a7482b1d84e4db554b8dc3660a5a2c778d71.zip"
+     "S3Key": "48448b434bb9437bf9dc8fa9a57c297ad28c539fed7796c4c006884804c71940.zip"
     },
     "Environment": {
      "Variables": {
@@ -1160,7 +1163,7 @@
        "Ref": "JarvisAudioBucketA3CB9231"
       },
       "SCHEDULER_GROUP": "jarvis-schedules",
-      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+      "BEDROCK_MODEL_ID": "meta.llama3-8b-instruct-v1:0",
       "NOTIFICATION_LAMBDA_ARN": {
        "Fn::GetAtt": [
         "NotificationSenderFnDE7351F3",
@@ -1193,7 +1196,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "JarvisStack/MemoProcessorFn/Resource",
-    "aws:asset:path": "asset.0aff6ff8ca64f71cb0cfc8ffc0c2a7482b1d84e4db554b8dc3660a5a2c778d71",
+    "aws:asset:path": "asset.48448b434bb9437bf9dc8fa9a57c297ad28c539fed7796c4c006884804c71940",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }
@@ -1400,7 +1403,7 @@
        "Ref": "JarvisAudioBucketA3CB9231"
       },
       "SCHEDULER_GROUP": "jarvis-schedules",
-      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+      "BEDROCK_MODEL_ID": "meta.llama3-8b-instruct-v1:0"
      }
     },
     "FunctionName": "jarvis-task-manager",
@@ -1546,7 +1549,7 @@
        "Ref": "JarvisAudioBucketA3CB9231"
       },
       "SCHEDULER_GROUP": "jarvis-schedules",
-      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+      "BEDROCK_MODEL_ID": "meta.llama3-8b-instruct-v1:0"
      }
     },
     "FunctionName": "jarvis-push-token-manager",

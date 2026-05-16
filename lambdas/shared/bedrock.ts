@@ -12,7 +12,7 @@ const client = new BedrockRuntimeClient({
   region: process.env.AWS_REGION || 'us-east-1',
 });
 
-const MODEL_ID = process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-5-sonnet-20241022-v2:0';
+const MODEL_ID = process.env.BEDROCK_MODEL_ID || 'meta.llama3-8b-instruct-v1:0';
 
 const SYSTEM_PROMPT = `You are JARVIS, an intelligent voice assistant that parses natural language voice commands into structured, actionable items.
 
@@ -55,17 +55,13 @@ Transcript:
 
 Parse this transcript and return the JSON array of actionable items.`;
 
+  const prompt = `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n${SYSTEM_PROMPT}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${userMessage}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`;
+
   const payload = {
-    anthropic_version: 'bedrock-2023-05-31',
-    max_tokens: 2048,
-    temperature: 0.1, // Low temperature for structured output
-    system: SYSTEM_PROMPT,
-    messages: [
-      {
-        role: 'user',
-        content: userMessage,
-      },
-    ],
+    prompt,
+    max_gen_len: 2048,
+    temperature: 0.1,
+    top_p: 0.9,
   };
 
   const command = new InvokeModelCommand({
@@ -77,11 +73,8 @@ Parse this transcript and return the JSON array of actionable items.`;
   const response = await client.send(command);
   const responseBody = JSON.parse(new TextDecoder().decode(response.body));
 
-  // Extract text content from Claude's response
-  const textContent = responseBody.content
-    ?.filter((block: { type: string }) => block.type === 'text')
-    ?.map((block: { text: string }) => block.text)
-    ?.join('') ?? '';
+  // Extract text content from Llama's response
+  const textContent = responseBody.generation ?? '';
 
   // Parse the JSON array from Claude's response
   // Handle case where Claude might wrap it in markdown code blocks

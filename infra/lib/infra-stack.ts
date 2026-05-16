@@ -166,7 +166,7 @@ export class InfraStack extends cdk.Stack {
       PUSH_TOKENS_TABLE: pushTokensTable.tableName,
       AUDIO_BUCKET: audioBucket.bucketName,
       SCHEDULER_GROUP: 'jarvis-schedules',
-      BEDROCK_MODEL_ID: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+      BEDROCK_MODEL_ID: 'meta.llama3-8b-instruct-v1:0',
     };
 
     const lambdasDir = path.join(__dirname, '..', '..', 'lambdas');
@@ -273,7 +273,8 @@ export class InfraStack extends cdk.Stack {
       new iam.PolicyStatement({
         actions: ['bedrock:InvokeModel'],
         resources: [
-          `arn:aws:bedrock:${this.region}::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0`,
+          `arn:aws:bedrock:*::foundation-model/*`,
+          `arn:aws:bedrock:*:${this.account}:inference-profile/*`,
         ],
       })
     );
