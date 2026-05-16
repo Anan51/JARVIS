@@ -67,10 +67,10 @@ export async function getMemoStatus(memoId: string): Promise<MemoStatusResponse>
   return response.json();
 }
 
-export async function analyzeMemo(memoId: string, transcript: string): Promise<MemoStatusResponse> {
+export async function analyzeMemo(memoId: string, transcript: string, userTime?: string, timezone?: string): Promise<MemoStatusResponse> {
   const response = await authFetch(`/memo/${memoId}/analyze`, {
     method: 'POST',
-    body: JSON.stringify({ transcript }),
+    body: JSON.stringify({ transcript, userTime, timezone }),
   });
   return response.json();
 }

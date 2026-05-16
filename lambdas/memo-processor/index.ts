@@ -57,65 +57,77 @@ export const handler = async (event: S3Event | ApiEvent) => {
   }
 };
 
+async function processTranscriptAndCreateTasks(userId: string, memoId: string, transcript: string, userTime?: string, timezone?: string) {
+  await updateMemo(userId, memoId, { status: 'analyzing', transcript });
+
+  const currentTime = userTime || new Date().toISOString();
+  const intents = await analyzeTranscript(transcript, currentTime, timezone);
+  console.log(`Parsed intents:`, JSON.stringify(intents));
+
+  const createdTasks = [];
+  for (const intent of intents) {
+    const taskId = randomUUID();
+    const task = {
+      userId,
+      taskId,
+      memoId,
+      type: intent.type,
+      title: intent.title,
+      description: intent.description,
+      status: 'pending',
+      scheduledTime: intent.scheduledTime,
+      recipient: intent.recipient,
+      messageBody: intent.messageBody,
+      recurring: intent.recurring,
+      recurringPattern: intent.recurringPattern,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (intent.scheduledTime && (intent.type === 'alarm' || intent.type === 'reminder')) {
+      const schedulerArn = await scheduleNotification(userId, taskId, intent);
+      (task as Record<string, unknown>).schedulerArn = schedulerArn;
+    }
+
+    await createTask(task);
+    createdTasks.push(task);
+  }
+
+  await updateMemo(userId, memoId, {
+    status: 'complete',
+    intents: intents,
+  });
+
+  return { intents, tasks: createdTasks };
+}
+
 async function handleApiEvent(event: ApiEvent) {
   try {
     const userId = event.requestContext.authorizer.claims.sub;
     const memoId = event.pathParameters.memoId;
     const body = JSON.parse(event.body || '{}');
     const transcript = body.transcript;
+    const userTime = body.userTime;
+    const timezone = body.timezone;
 
     if (!transcript) {
       return { statusCode: 400, body: JSON.stringify({ message: 'Missing transcript' }) };
     }
 
-    await updateMemo(userId, memoId, { status: 'analyzing' });
-
-    const currentTime = new Date().toISOString();
-    const intents = await analyzeTranscript(transcript, currentTime);
-    console.log(`Parsed intents:`, JSON.stringify(intents));
-
-    const createdTasks = [];
-    for (const intent of intents) {
-      const taskId = randomUUID();
-      const task = {
-        userId,
-        taskId,
-        memoId,
-        type: intent.type,
-        title: intent.title,
-        description: intent.description,
-        status: 'pending',
-        scheduledTime: intent.scheduledTime,
-        recipient: intent.recipient,
-        messageBody: intent.messageBody,
-        recurring: intent.recurring,
-        recurringPattern: intent.recurringPattern,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      if (intent.scheduledTime && (intent.type === 'alarm' || intent.type === 'reminder')) {
-        const schedulerArn = await scheduleNotification(userId, taskId, intent);
-        (task as Record<string, unknown>).schedulerArn = schedulerArn;
-      }
-
-      await createTask(task);
-      createdTasks.push(task);
-    }
-
-    await updateMemo(userId, memoId, {
-      status: 'complete',
-      intents: intents,
-    });
+    const result = await processTranscriptAndCreateTasks(userId, memoId, transcript, userTime, timezone);
 
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ message: 'Success', intents, tasks: createdTasks }),
+      body: JSON.stringify({ message: 'Success', ...result }),
     };
   } catch (err) {
     console.error('API Error:', err);
-    return { statusCode: 500, body: JSON.stringify({ message: 'Internal error' }) };
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ message: 'Internal error' })
+    };
   }
 }
 
@@ -145,7 +157,7 @@ async function handleS3Event(event: S3Event) {
       console.log(`Memo ${memoId} is pending confirmation.`);
     } catch (err) {
       console.error(`Error processing memo ${memoId}:`, err);
-      await updateMemo(userId, memoId, { status: 'failed' }).catch(() => {});
+      await updateMemo(userId, memoId, { status: 'failed' }).catch(() => { });
     }
   }
 }

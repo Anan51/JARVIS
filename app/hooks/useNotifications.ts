@@ -102,6 +102,11 @@ export function useNotifications(): UseNotificationsReturn {
 
   const scheduleLocalAlarm = useCallback(
     async (title: string, body: string, triggerDate: Date): Promise<string> => {
+      if (Platform.OS === 'web') {
+        console.warn('Local notifications are not supported on web. Skipping schedule:', title);
+        return `web-dummy-${Date.now()}`;
+      }
+
       // On Android, use the system AlarmClock intent to create a real alarm
       // with SKIP_UI to avoid requiring user confirmation
       if (Platform.OS === 'android') {
@@ -151,6 +156,11 @@ export function useNotifications(): UseNotificationsReturn {
 
   const scheduleLocalReminder = useCallback(
     async (title: string, body: string, triggerDate: Date): Promise<string> => {
+      if (Platform.OS === 'web') {
+        console.warn('Local notifications are not supported on web. Skipping schedule:', title);
+        return `web-dummy-${Date.now()}`;
+      }
+
       const id = await Notifications.scheduleNotificationAsync({
         content: {
           title: `📌 ${title}`,

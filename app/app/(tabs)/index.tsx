@@ -111,10 +111,10 @@ export default function RecordScreen() {
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.background },
-  centerWrapper: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 24 
+  centerWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24
   },
 });

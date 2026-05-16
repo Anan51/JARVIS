@@ -24,7 +24,7 @@ interface AudioRecorderReturn {
   startRecording: () => Promise<void>;
   stopRecording: () => Promise<void>;
   reset: () => void;
-  confirmTranscript: (transcript: string) => Promise<void>;
+  confirmTranscript: (transcript: string, options?: { userTime: string; timezone: string }) => Promise<void>;
   metering: number; // Audio level for waveform visualization (-160 to 0)
 }
 
@@ -193,12 +193,12 @@ export function useAudioRecorder(): AudioRecorderReturn {
     setMetering(-160);
   }, []);
 
-  const confirmTranscript = useCallback(async (transcript: string) => {
+  const confirmTranscript = useCallback(async (transcript: string, options?: { userTime: string; timezone: string }) => {
     if (!result?.memoId) return;
     try {
       setState('processing');
       setProcessingStatus('Analyzing with AI...');
-      const finalStatus = await analyzeMemo(result.memoId, transcript);
+      const finalStatus = await analyzeMemo(result.memoId, transcript, options?.userTime, options?.timezone);
       setResult(finalStatus);
       setState('complete');
     } catch (err) {
