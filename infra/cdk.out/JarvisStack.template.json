@@ -1,0 +1,3205 @@
+{
+ "Description": "JARVIS AI Voice Assistant - Serverless Infrastructure",
+ "Resources": {
+  "JarvisAudioBucketA3CB9231": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": {
+     "Fn::Join": [
+      "",
+      [
+       "jarvis-audio-",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       "-us-east-1"
+      ]
+     ]
+    },
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "PUT",
+        "GET"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ],
+       "MaxAge": 3600
+      }
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "ExpirationInDays": 30,
+       "Prefix": "audio/",
+       "Status": "Enabled"
+      },
+      {
+       "ExpirationInDays": 7,
+       "Prefix": "transcripts/",
+       "Status": "Enabled"
+      }
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAudioBucket/Resource"
+   }
+  },
+  "JarvisAudioBucketPolicyD1069FB0": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "JarvisAudioBucketA3CB9231"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "JarvisAudioBucketA3CB9231",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "JarvisAudioBucketA3CB9231",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAudioBucket/Policy/Resource"
+   }
+  },
+  "JarvisAudioBucketAutoDeleteObjectsCustomResourceF1AEAF79": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "JarvisAudioBucketA3CB9231"
+    }
+   },
+   "DependsOn": [
+    "JarvisAudioBucketPolicyD1069FB0"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAudioBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "JarvisAudioBucketNotificationsHandlerPolicy83AC22B2": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:PutBucketNotification",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisAudioBucketA3CB9231",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "JarvisAudioBucketNotificationsHandlerPolicy83AC22B2",
+    "Roles": [
+     {
+      "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAudioBucket/Notifications/HandlerPolicy/Resource"
+   }
+  },
+  "JarvisAudioBucketNotifications0B8A1531": {
+   "Type": "Custom::S3BucketNotifications",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "JarvisAudioBucketA3CB9231"
+    },
+    "NotificationConfiguration": {
+     "LambdaFunctionConfigurations": [
+      {
+       "Events": [
+        "s3:ObjectCreated:*"
+       ],
+       "Filter": {
+        "Key": {
+         "FilterRules": [
+          {
+           "Name": "prefix",
+           "Value": "audio/"
+          }
+         ]
+        }
+       },
+       "LambdaFunctionArn": {
+        "Fn::GetAtt": [
+         "MemoProcessorFn61EED2DC",
+         "Arn"
+        ]
+       }
+      }
+     ]
+    },
+    "Managed": true,
+    "SkipDestinationValidation": false
+   },
+   "DependsOn": [
+    "JarvisAudioBucketAllowBucketNotificationsToJarvisStackMemoProcessorFn0617863897C3A58A",
+    "JarvisAudioBucketNotificationsHandlerPolicy83AC22B2",
+    "JarvisAudioBucketPolicyD1069FB0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAudioBucket/Notifications/Resource"
+   }
+  },
+  "JarvisAudioBucketAllowBucketNotificationsToJarvisStackMemoProcessorFn0617863897C3A58A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MemoProcessorFn61EED2DC",
+      "Arn"
+     ]
+    },
+    "Principal": "s3.amazonaws.com",
+    "SourceAccount": {
+     "Ref": "AWS::AccountId"
+    },
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "JarvisAudioBucketA3CB9231",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAudioBucket/AllowBucketNotificationsToJarvisStackMemoProcessorFn06178638"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
+     },
+     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "JarvisAudioBucketA3CB9231"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "/private/var/folders/zg/0hw73kkx68d6vs7fs_n63gxw0000gn/T/cdk-custom-resourceQVuTLE",
+    "aws:asset:property": "Code"
+   }
+  },
+  "JarvisTasksTableBA7C51BE": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "taskId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "taskId",
+      "KeyType": "RANGE"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": true
+    },
+    "TableName": "JarvisTasks"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisTasksTable/Resource"
+   }
+  },
+  "JarvisMemosTable6E8B8089": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "memoId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "memoId",
+      "KeyType": "RANGE"
+     }
+    ],
+    "TableName": "JarvisMemos"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisMemosTable/Resource"
+   }
+  },
+  "JarvisPushTokensTable52EE0B84": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "token",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "token",
+      "KeyType": "RANGE"
+     }
+    ],
+    "TableName": "JarvisPushTokens"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisPushTokensTable/Resource"
+   }
+  },
+  "JarvisUserPool45CBB6EE": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": false,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "name",
+      "Required": false
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "jarvis-users",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisUserPool/Resource"
+   }
+  },
+  "JarvisAppClientC24775B1": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ClientName": "jarvis-mobile-app",
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "GenerateSecret": false,
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "UserPoolId": {
+     "Ref": "JarvisUserPool45CBB6EE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAppClient/Resource"
+   }
+  },
+  "JarvisIdentityPool": {
+   "Type": "AWS::Cognito::IdentityPool",
+   "Properties": {
+    "AllowUnauthenticatedIdentities": false,
+    "CognitoIdentityProviders": [
+     {
+      "ClientId": {
+       "Ref": "JarvisAppClientC24775B1"
+      },
+      "ProviderName": {
+       "Fn::GetAtt": [
+        "JarvisUserPool45CBB6EE",
+        "ProviderName"
+       ]
+      }
+     }
+    ],
+    "IdentityPoolName": "jarvis_identity_pool"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisIdentityPool"
+   }
+  },
+  "CognitoAuthRole7B7E27C0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRoleWithWebIdentity",
+       "Condition": {
+        "StringEquals": {
+         "cognito-identity.amazonaws.com:aud": {
+          "Ref": "JarvisIdentityPool"
+         }
+        },
+        "ForAnyValue:StringLike": {
+         "cognito-identity.amazonaws.com:amr": "authenticated"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Federated": "cognito-identity.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/CognitoAuthRole/Resource"
+   }
+  },
+  "CognitoAuthRoleDefaultPolicy942426C8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:PutObject",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "JarvisAudioBucketA3CB9231",
+            "Arn"
+           ]
+          },
+          "/audio/${cognito-identity.amazonaws.com:sub}/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CognitoAuthRoleDefaultPolicy942426C8",
+    "Roles": [
+     {
+      "Ref": "CognitoAuthRole7B7E27C0"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/CognitoAuthRole/DefaultPolicy/Resource"
+   }
+  },
+  "IdentityPoolRoles": {
+   "Type": "AWS::Cognito::IdentityPoolRoleAttachment",
+   "Properties": {
+    "IdentityPoolId": {
+     "Ref": "JarvisIdentityPool"
+    },
+    "Roles": {
+     "authenticated": {
+      "Fn::GetAtt": [
+       "CognitoAuthRole7B7E27C0",
+       "Arn"
+      ]
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/IdentityPoolRoles"
+   }
+  },
+  "JarvisSchedulerGroup": {
+   "Type": "AWS::Scheduler::ScheduleGroup",
+   "Properties": {
+    "Name": "jarvis-schedules"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisSchedulerGroup"
+   }
+  },
+  "NotificationSenderFnServiceRoleC52C0793": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/NotificationSenderFn/ServiceRole/Resource"
+   }
+  },
+  "NotificationSenderFnServiceRoleDefaultPolicyC8944C63": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisPushTokensTable52EE0B84",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisTasksTableBA7C51BE",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "NotificationSenderFnServiceRoleDefaultPolicyC8944C63",
+    "Roles": [
+     {
+      "Ref": "NotificationSenderFnServiceRoleC52C0793"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/NotificationSenderFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "NotificationSenderFnDE7351F3": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
+     },
+     "S3Key": "c5e6b77984c1a9c2712fccaa024822ead60491fb486535dec2f793100420d3a4.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TASKS_TABLE": {
+       "Ref": "JarvisTasksTableBA7C51BE"
+      },
+      "MEMOS_TABLE": {
+       "Ref": "JarvisMemosTable6E8B8089"
+      },
+      "PUSH_TOKENS_TABLE": {
+       "Ref": "JarvisPushTokensTable52EE0B84"
+      },
+      "AUDIO_BUCKET": {
+       "Ref": "JarvisAudioBucketA3CB9231"
+      },
+      "SCHEDULER_GROUP": "jarvis-schedules",
+      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+     }
+    },
+    "FunctionName": "jarvis-notification-sender",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "NotificationSenderFnServiceRoleC52C0793",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "NotificationSenderFnServiceRoleDefaultPolicyC8944C63",
+    "NotificationSenderFnServiceRoleC52C0793"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/NotificationSenderFn/Resource",
+    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.c5e6b77984c1a9c2712fccaa024822ead60491fb486535dec2f793100420d3a4",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "NotificationSenderFnLogGroup2E4F057A": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "NotificationSenderFnDE7351F3"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/NotificationSenderFn/LogGroup/Resource"
+   }
+  },
+  "SchedulerRole59E73443": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "scheduler.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "RoleName": "jarvis-scheduler-role"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/SchedulerRole/Resource"
+   }
+  },
+  "SchedulerRoleDefaultPolicy66F774B8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "NotificationSenderFnDE7351F3",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "SchedulerRoleDefaultPolicy66F774B8",
+    "Roles": [
+     {
+      "Ref": "SchedulerRole59E73443"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/SchedulerRole/DefaultPolicy/Resource"
+   }
+  },
+  "MemoUploadFnServiceRole5B2FBBB1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoUploadFn/ServiceRole/Resource"
+   }
+  },
+  "MemoUploadFnServiceRoleDefaultPolicy247AAD7A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "JarvisAudioBucketA3CB9231",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisMemosTable6E8B8089",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "MemoUploadFnServiceRoleDefaultPolicy247AAD7A",
+    "Roles": [
+     {
+      "Ref": "MemoUploadFnServiceRole5B2FBBB1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoUploadFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "MemoUploadFn86D880CA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
+     },
+     "S3Key": "7636056e5280a5f5eb1bf15f43585d87a8dab358ccdbcb658e15cdb6309712d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TASKS_TABLE": {
+       "Ref": "JarvisTasksTableBA7C51BE"
+      },
+      "MEMOS_TABLE": {
+       "Ref": "JarvisMemosTable6E8B8089"
+      },
+      "PUSH_TOKENS_TABLE": {
+       "Ref": "JarvisPushTokensTable52EE0B84"
+      },
+      "AUDIO_BUCKET": {
+       "Ref": "JarvisAudioBucketA3CB9231"
+      },
+      "SCHEDULER_GROUP": "jarvis-schedules",
+      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+     }
+    },
+    "FunctionName": "jarvis-memo-upload",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "MemoUploadFnServiceRole5B2FBBB1",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "MemoUploadFnServiceRoleDefaultPolicy247AAD7A",
+    "MemoUploadFnServiceRole5B2FBBB1"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoUploadFn/Resource",
+    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.7636056e5280a5f5eb1bf15f43585d87a8dab358ccdbcb658e15cdb6309712d3",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "MemoUploadFnLogGroup6E35AE53": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "MemoUploadFn86D880CA"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoUploadFn/LogGroup/Resource"
+   }
+  },
+  "MemoProcessorFnServiceRole530AB683": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoProcessorFn/ServiceRole/Resource"
+   }
+  },
+  "MemoProcessorFnServiceRoleDefaultPolicyA14A69A1": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "JarvisAudioBucketA3CB9231",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "JarvisAudioBucketA3CB9231",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisMemosTable6E8B8089",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisTasksTableBA7C51BE",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "transcribe:GetTranscriptionJob",
+        "transcribe:StartTranscriptionJob"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "bedrock:InvokeModel",
+       "Effect": "Allow",
+       "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0"
+      },
+      {
+       "Action": "scheduler:CreateSchedule",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:scheduler:us-east-1:",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":schedule/jarvis-schedules/*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "SchedulerRole59E73443",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "MemoProcessorFnServiceRoleDefaultPolicyA14A69A1",
+    "Roles": [
+     {
+      "Ref": "MemoProcessorFnServiceRole530AB683"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoProcessorFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "MemoProcessorFn61EED2DC": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
+     },
+     "S3Key": "b9d52ff3db3a741319885cf8b49a1609ad631db0576a27caec54f9fd5c50029b.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TASKS_TABLE": {
+       "Ref": "JarvisTasksTableBA7C51BE"
+      },
+      "MEMOS_TABLE": {
+       "Ref": "JarvisMemosTable6E8B8089"
+      },
+      "PUSH_TOKENS_TABLE": {
+       "Ref": "JarvisPushTokensTable52EE0B84"
+      },
+      "AUDIO_BUCKET": {
+       "Ref": "JarvisAudioBucketA3CB9231"
+      },
+      "SCHEDULER_GROUP": "jarvis-schedules",
+      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+      "NOTIFICATION_LAMBDA_ARN": {
+       "Fn::GetAtt": [
+        "NotificationSenderFnDE7351F3",
+        "Arn"
+       ]
+      },
+      "SCHEDULER_ROLE_ARN": {
+       "Fn::GetAtt": [
+        "SchedulerRole59E73443",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "FunctionName": "jarvis-memo-processor",
+    "Handler": "index.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "MemoProcessorFnServiceRole530AB683",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 600
+   },
+   "DependsOn": [
+    "MemoProcessorFnServiceRoleDefaultPolicyA14A69A1",
+    "MemoProcessorFnServiceRole530AB683"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoProcessorFn/Resource",
+    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.b9d52ff3db3a741319885cf8b49a1609ad631db0576a27caec54f9fd5c50029b",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "MemoProcessorFnLogGroupFE580DCB": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "MemoProcessorFn61EED2DC"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/MemoProcessorFn/LogGroup/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Description": "AWS CloudFormation handler for \"Custom::S3BucketNotifications\" resources (@aws-cdk/aws-s3)",
+    "Code": {
+     "ZipFile": "import boto3  # type: ignore\nimport json\nimport logging\nimport urllib.request\n\ns3 = boto3.client(\"s3\")\n\nEVENTBRIDGE_CONFIGURATION = 'EventBridgeConfiguration'\nCONFIGURATION_TYPES = [\"TopicConfigurations\", \"QueueConfigurations\", \"LambdaFunctionConfigurations\"]\n\ndef handler(event: dict, context):\n  response_status = \"SUCCESS\"\n  error_message = \"\"\n  try:\n    props = event[\"ResourceProperties\"]\n    notification_configuration = props[\"NotificationConfiguration\"]\n    managed = props.get('Managed', 'true').lower() == 'true'\n    skipDestinationValidation = props.get('SkipDestinationValidation', 'false').lower() == 'true'\n    stack_id = event['StackId']\n    old = event.get(\"OldResourceProperties\", {}).get(\"NotificationConfiguration\", {})\n    if managed:\n      config = handle_managed(event[\"RequestType\"], notification_configuration)\n    else:\n      config = handle_unmanaged(props[\"BucketName\"], stack_id, event[\"RequestType\"], notification_configuration, old)\n    s3.put_bucket_notification_configuration(Bucket=props[\"BucketName\"], NotificationConfiguration=config, SkipDestinationValidation=skipDestinationValidation)\n  except Exception as e:\n    logging.exception(\"Failed to put bucket notification configuration\")\n    response_status = \"FAILED\"\n    error_message = f\"Error: {str(e)}. \"\n  finally:\n    submit_response(event, context, response_status, error_message)\n\ndef handle_managed(request_type, notification_configuration):\n  if request_type == 'Delete':\n    return {}\n  return notification_configuration\n\ndef handle_unmanaged(bucket, stack_id, request_type, notification_configuration, old):\n  def get_id(n):\n    n['Id'] = ''\n    sorted_notifications = sort_filter_rules(n)\n    strToHash=json.dumps(sorted_notifications, sort_keys=True).replace('\"Name\": \"prefix\"', '\"Name\": \"Prefix\"').replace('\"Name\": \"suffix\"', '\"Name\": \"Suffix\"')\n    return f\"{stack_id}-{hash(strToHash)}\"\n  def with_id(n):\n    n['Id'] = get_id(n)\n    return n\n\n  external_notifications = {}\n  existing_notifications = s3.get_bucket_notification_configuration(Bucket=bucket)\n  for t in CONFIGURATION_TYPES:\n    if request_type == 'Update':\n        old_incoming_ids = [get_id(n) for n in old.get(t, [])]\n        external_notifications[t] = [n for n in existing_notifications.get(t, []) if not get_id(n) in old_incoming_ids]      \n    elif request_type == 'Delete':\n        external_notifications[t] = [n for n in existing_notifications.get(t, []) if not n['Id'].startswith(f\"{stack_id}-\")]\n    elif request_type == 'Create':\n        external_notifications[t] = [n for n in existing_notifications.get(t, [])]\n  if EVENTBRIDGE_CONFIGURATION in existing_notifications:\n    external_notifications[EVENTBRIDGE_CONFIGURATION] = existing_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  if request_type == 'Delete':\n    return external_notifications\n\n  notifications = {}\n  for t in CONFIGURATION_TYPES:\n    external = external_notifications.get(t, [])\n    incoming = [with_id(n) for n in notification_configuration.get(t, [])]\n    notifications[t] = external + incoming\n\n  if EVENTBRIDGE_CONFIGURATION in notification_configuration:\n    notifications[EVENTBRIDGE_CONFIGURATION] = notification_configuration[EVENTBRIDGE_CONFIGURATION]\n  elif EVENTBRIDGE_CONFIGURATION in external_notifications:\n    notifications[EVENTBRIDGE_CONFIGURATION] = external_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  return notifications\n\ndef submit_response(event: dict, context, response_status: str, error_message: str):\n  response_body = json.dumps(\n    {\n      \"Status\": response_status,\n      \"Reason\": f\"{error_message}See the details in CloudWatch Log Stream: {context.log_stream_name}\",\n      \"PhysicalResourceId\": event.get(\"PhysicalResourceId\") or event[\"LogicalResourceId\"],\n      \"StackId\": event[\"StackId\"],\n      \"RequestId\": event[\"RequestId\"],\n      \"LogicalResourceId\": event[\"LogicalResourceId\"],\n      \"NoEcho\": False,\n    }\n  ).encode(\"utf-8\")\n  headers = {\"content-type\": \"\", \"content-length\": str(len(response_body))}\n  try:\n    req = urllib.request.Request(url=event[\"ResponseURL\"], headers=headers, data=response_body, method=\"PUT\")\n    with urllib.request.urlopen(req) as response:\n      print(response.read().decode(\"utf-8\"))\n    print(\"Status code: \" + response.reason)\n  except Exception as e:\n      print(\"send(..) failed executing request.urlopen(..): \" + str(e))\n\ndef sort_filter_rules(json_obj):\n  if not isinstance(json_obj, dict):\n      return json_obj\n  for key, value in json_obj.items():\n      if isinstance(value, dict):\n          json_obj[key] = sort_filter_rules(value)\n      elif isinstance(value, list):\n          json_obj[key] = [sort_filter_rules(item) for item in value]\n  if \"Filter\" in json_obj and \"Key\" in json_obj[\"Filter\"] and \"FilterRules\" in json_obj[\"Filter\"][\"Key\"]:\n      filter_rules = json_obj[\"Filter\"][\"Key\"][\"FilterRules\"]\n      sorted_filter_rules = sorted(filter_rules, key=lambda x: x[\"Name\"])\n      json_obj[\"Filter\"][\"Key\"][\"FilterRules\"] = sorted_filter_rules\n  return json_obj"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.13",
+    "Timeout": 300
+   },
+   "DependsOn": [
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource"
+   }
+  },
+  "TaskManagerFnServiceRoleE3680006": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/TaskManagerFn/ServiceRole/Resource"
+   }
+  },
+  "TaskManagerFnServiceRoleDefaultPolicy56A23763": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisTasksTableBA7C51BE",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisMemosTable6E8B8089",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "scheduler:DeleteSchedule",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:scheduler:us-east-1:",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":schedule/jarvis-schedules/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "TaskManagerFnServiceRoleDefaultPolicy56A23763",
+    "Roles": [
+     {
+      "Ref": "TaskManagerFnServiceRoleE3680006"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/TaskManagerFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "TaskManagerFn257A5BAA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
+     },
+     "S3Key": "c408ad24eea56b911cbee72fd997e57b393795c3305673beb66709d608a9b9ca.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TASKS_TABLE": {
+       "Ref": "JarvisTasksTableBA7C51BE"
+      },
+      "MEMOS_TABLE": {
+       "Ref": "JarvisMemosTable6E8B8089"
+      },
+      "PUSH_TOKENS_TABLE": {
+       "Ref": "JarvisPushTokensTable52EE0B84"
+      },
+      "AUDIO_BUCKET": {
+       "Ref": "JarvisAudioBucketA3CB9231"
+      },
+      "SCHEDULER_GROUP": "jarvis-schedules",
+      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+     }
+    },
+    "FunctionName": "jarvis-task-manager",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "TaskManagerFnServiceRoleE3680006",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 15
+   },
+   "DependsOn": [
+    "TaskManagerFnServiceRoleDefaultPolicy56A23763",
+    "TaskManagerFnServiceRoleE3680006"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/TaskManagerFn/Resource",
+    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.c408ad24eea56b911cbee72fd997e57b393795c3305673beb66709d608a9b9ca",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "TaskManagerFnLogGroup590E3CD2": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "TaskManagerFn257A5BAA"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/TaskManagerFn/LogGroup/Resource"
+   }
+  },
+  "PushTokenManagerFnServiceRole75F74C6A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/PushTokenManagerFn/ServiceRole/Resource"
+   }
+  },
+  "PushTokenManagerFnServiceRoleDefaultPolicyC818F369": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "JarvisPushTokensTable52EE0B84",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PushTokenManagerFnServiceRoleDefaultPolicyC818F369",
+    "Roles": [
+     {
+      "Ref": "PushTokenManagerFnServiceRole75F74C6A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/PushTokenManagerFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "PushTokenManagerFn7051253C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
+     },
+     "S3Key": "2bebe5ab57e5a951d90a75482a5d97e442884828ecd7be128fbc28a9cc2782d9.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TASKS_TABLE": {
+       "Ref": "JarvisTasksTableBA7C51BE"
+      },
+      "MEMOS_TABLE": {
+       "Ref": "JarvisMemosTable6E8B8089"
+      },
+      "PUSH_TOKENS_TABLE": {
+       "Ref": "JarvisPushTokensTable52EE0B84"
+      },
+      "AUDIO_BUCKET": {
+       "Ref": "JarvisAudioBucketA3CB9231"
+      },
+      "SCHEDULER_GROUP": "jarvis-schedules",
+      "BEDROCK_MODEL_ID": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+     }
+    },
+    "FunctionName": "jarvis-push-token-manager",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "PushTokenManagerFnServiceRole75F74C6A",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "PushTokenManagerFnServiceRoleDefaultPolicyC818F369",
+    "PushTokenManagerFnServiceRole75F74C6A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/PushTokenManagerFn/Resource",
+    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.2bebe5ab57e5a951d90a75482a5d97e442884828ecd7be128fbc28a9cc2782d9",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "PushTokenManagerFnLogGroupCF946C76": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "PushTokenManagerFn7051253C"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 731
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/PushTokenManagerFn/LogGroup/Resource"
+   }
+  },
+  "JarvisApi93403720": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "JARVIS Voice Assistant API",
+    "Name": "JARVIS API"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Resource"
+   }
+  },
+  "JarvisApiDeployment5331318A38bd9ab4a38ac2f8eea9660583aebaca": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "JARVIS Voice Assistant API",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "DependsOn": [
+    "JarvisApimemomemoIdOPTIONSD1946B8F",
+    "JarvisApimemomemoIdAA003036",
+    "JarvisApimemomemoIdstatusGET0C6D31D0",
+    "JarvisApimemomemoIdstatusOPTIONS2C04D906",
+    "JarvisApimemomemoIdstatus9F4CD7F0",
+    "JarvisApimemoOPTIONSF0F9D74A",
+    "JarvisApimemoPOST53B2AB68",
+    "JarvisApimemoDF536499",
+    "JarvisApiOPTIONS5508EA4F",
+    "JarvisApipushtokenDELETE3ED96F1D",
+    "JarvisApipushtokenGETA18181C3",
+    "JarvisApipushtokenOPTIONS189CD342",
+    "JarvisApipushtokenPOST2A0BD81B",
+    "JarvisApipushtoken3C959346",
+    "JarvisApitaskstaskIdDELETE71F4D4F3",
+    "JarvisApitaskstaskIdOPTIONS6E21554C",
+    "JarvisApitaskstaskIdPUT3AB6059E",
+    "JarvisApitaskstaskIdB1C9ACA9",
+    "JarvisApitasksGET0F84EB33",
+    "JarvisApitasksOPTIONSAC23AF06",
+    "JarvisApitasksPOST3B20DEE6",
+    "JarvisApitasksD4EEA0BA",
+    "JarvisAuthorizer6D5D45D1"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
+   }
+  },
+  "JarvisApiDeploymentStageprod1171D6F5": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "JarvisApiDeployment5331318A38bd9ab4a38ac2f8eea9660583aebaca"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    },
+    "StageName": "prod"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/DeploymentStage.prod/Resource"
+   }
+  },
+  "JarvisApiOPTIONS5508EA4F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "JarvisApi93403720",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/OPTIONS/Resource"
+   }
+  },
+  "JarvisApimemoDF536499": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "JarvisApi93403720",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "memo",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/Resource"
+   }
+  },
+  "JarvisApimemoOPTIONSF0F9D74A": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "JarvisApimemoDF536499"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/OPTIONS/Resource"
+   }
+  },
+  "JarvisApimemoPOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTmemo4070D776": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MemoUploadFn86D880CA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/POST/memo"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..memo"
+   }
+  },
+  "JarvisApimemoPOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTmemo208805FF": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MemoUploadFn86D880CA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/POST/memo"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..memo"
+   }
+  },
+  "JarvisApimemoPOST53B2AB68": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "MemoUploadFn86D880CA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApimemoDF536499"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/POST/Resource"
+   }
+  },
+  "JarvisApimemomemoIdAA003036": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "JarvisApimemoDF536499"
+    },
+    "PathPart": "{memoId}",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/Resource"
+   }
+  },
+  "JarvisApimemomemoIdOPTIONSD1946B8F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "JarvisApimemomemoIdAA003036"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/OPTIONS/Resource"
+   }
+  },
+  "JarvisApimemomemoIdstatus9F4CD7F0": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "JarvisApimemomemoIdAA003036"
+    },
+    "PathPart": "status",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/status/Resource"
+   }
+  },
+  "JarvisApimemomemoIdstatusOPTIONS2C04D906": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "JarvisApimemomemoIdstatus9F4CD7F0"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/status/OPTIONS/Resource"
+   }
+  },
+  "JarvisApimemomemoIdstatusGETApiPermissionJarvisStackJarvisApiCA8D02ECGETmemomemoIdstatusF66DFD0F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/GET/memo/*/status"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET/ApiPermission.JarvisStackJarvisApiCA8D02EC.GET..memo.{memoId}.status"
+   }
+  },
+  "JarvisApimemomemoIdstatusGETApiPermissionTestJarvisStackJarvisApiCA8D02ECGETmemomemoIdstatusB19904E0": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/GET/memo/*/status"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.GET..memo.{memoId}.status"
+   }
+  },
+  "JarvisApimemomemoIdstatusGET0C6D31D0": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "TaskManagerFn257A5BAA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApimemomemoIdstatus9F4CD7F0"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET/Resource"
+   }
+  },
+  "JarvisApitasksD4EEA0BA": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "JarvisApi93403720",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "tasks",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/Resource"
+   }
+  },
+  "JarvisApitasksOPTIONSAC23AF06": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "JarvisApitasksD4EEA0BA"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/OPTIONS/Resource"
+   }
+  },
+  "JarvisApitasksGETApiPermissionJarvisStackJarvisApiCA8D02ECGETtasksC751A2BE": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/GET/tasks"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/GET/ApiPermission.JarvisStackJarvisApiCA8D02EC.GET..tasks"
+   }
+  },
+  "JarvisApitasksGETApiPermissionTestJarvisStackJarvisApiCA8D02ECGETtasks211BCE25": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/GET/tasks"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/GET/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.GET..tasks"
+   }
+  },
+  "JarvisApitasksGET0F84EB33": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "TaskManagerFn257A5BAA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApitasksD4EEA0BA"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/GET/Resource"
+   }
+  },
+  "JarvisApitasksPOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTtasksA59ABFD5": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/POST/tasks"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..tasks"
+   }
+  },
+  "JarvisApitasksPOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTtasks8A595F74": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/POST/tasks"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..tasks"
+   }
+  },
+  "JarvisApitasksPOST3B20DEE6": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "TaskManagerFn257A5BAA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApitasksD4EEA0BA"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/POST/Resource"
+   }
+  },
+  "JarvisApitaskstaskIdB1C9ACA9": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "JarvisApitasksD4EEA0BA"
+    },
+    "PathPart": "{taskId}",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/Resource"
+   }
+  },
+  "JarvisApitaskstaskIdOPTIONS6E21554C": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "JarvisApitaskstaskIdB1C9ACA9"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/OPTIONS/Resource"
+   }
+  },
+  "JarvisApitaskstaskIdPUTApiPermissionJarvisStackJarvisApiCA8D02ECPUTtaskstaskIdD59956C4": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/PUT/tasks/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/PUT/ApiPermission.JarvisStackJarvisApiCA8D02EC.PUT..tasks.{taskId}"
+   }
+  },
+  "JarvisApitaskstaskIdPUTApiPermissionTestJarvisStackJarvisApiCA8D02ECPUTtaskstaskId7B3FC593": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/PUT/tasks/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/PUT/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.PUT..tasks.{taskId}"
+   }
+  },
+  "JarvisApitaskstaskIdPUT3AB6059E": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "PUT",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "TaskManagerFn257A5BAA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApitaskstaskIdB1C9ACA9"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/PUT/Resource"
+   }
+  },
+  "JarvisApitaskstaskIdDELETEApiPermissionJarvisStackJarvisApiCA8D02ECDELETEtaskstaskId146ACBAC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/DELETE/tasks/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/DELETE/ApiPermission.JarvisStackJarvisApiCA8D02EC.DELETE..tasks.{taskId}"
+   }
+  },
+  "JarvisApitaskstaskIdDELETEApiPermissionTestJarvisStackJarvisApiCA8D02ECDELETEtaskstaskId45B99949": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TaskManagerFn257A5BAA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/DELETE/tasks/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/DELETE/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.DELETE..tasks.{taskId}"
+   }
+  },
+  "JarvisApitaskstaskIdDELETE71F4D4F3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "DELETE",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "TaskManagerFn257A5BAA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApitaskstaskIdB1C9ACA9"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/tasks/{taskId}/DELETE/Resource"
+   }
+  },
+  "JarvisApipushtoken3C959346": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "JarvisApi93403720",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "push-token",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/Resource"
+   }
+  },
+  "JarvisApipushtokenOPTIONS189CD342": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "JarvisApipushtoken3C959346"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/OPTIONS/Resource"
+   }
+  },
+  "JarvisApipushtokenPOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTpushtokenE5B25955": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PushTokenManagerFn7051253C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/POST/push-token"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..push-token"
+   }
+  },
+  "JarvisApipushtokenPOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTpushtoken05491FEF": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PushTokenManagerFn7051253C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/POST/push-token"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..push-token"
+   }
+  },
+  "JarvisApipushtokenPOST2A0BD81B": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "PushTokenManagerFn7051253C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApipushtoken3C959346"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/POST/Resource"
+   }
+  },
+  "JarvisApipushtokenGETApiPermissionJarvisStackJarvisApiCA8D02ECGETpushtoken3F56FE51": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PushTokenManagerFn7051253C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/GET/push-token"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/GET/ApiPermission.JarvisStackJarvisApiCA8D02EC.GET..push-token"
+   }
+  },
+  "JarvisApipushtokenGETApiPermissionTestJarvisStackJarvisApiCA8D02ECGETpushtokenE4E875E5": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PushTokenManagerFn7051253C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/GET/push-token"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/GET/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.GET..push-token"
+   }
+  },
+  "JarvisApipushtokenGETA18181C3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "PushTokenManagerFn7051253C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApipushtoken3C959346"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/GET/Resource"
+   }
+  },
+  "JarvisApipushtokenDELETEApiPermissionJarvisStackJarvisApiCA8D02ECDELETEpushtokenC3BDA7B9": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PushTokenManagerFn7051253C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/DELETE/push-token"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/DELETE/ApiPermission.JarvisStackJarvisApiCA8D02EC.DELETE..push-token"
+   }
+  },
+  "JarvisApipushtokenDELETEApiPermissionTestJarvisStackJarvisApiCA8D02ECDELETEpushtokenD20D8D2D": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PushTokenManagerFn7051253C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/DELETE/push-token"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/DELETE/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.DELETE..push-token"
+   }
+  },
+  "JarvisApipushtokenDELETE3ED96F1D": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "DELETE",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "PushTokenManagerFn7051253C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApipushtoken3C959346"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/push-token/DELETE/Resource"
+   }
+  },
+  "JarvisAuthorizer6D5D45D1": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "jarvis-cognito-authorizer",
+    "ProviderARNs": [
+     {
+      "Fn::GetAtt": [
+       "JarvisUserPool45CBB6EE",
+       "Arn"
+      ]
+     }
+    ],
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisAuthorizer/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/+0aXW/bNvC3lI8Fq61J9+I31027oEnj2c6AwTACWjzLl1CkRlJJVMH/fSApynLTpusXmrgCEoi6I++Td9QdfZAc/PEi+f0JuzHPUn71TOAyqaeWpVeU3ZiL2hwm9csyvQI7r8nSD96xHMiAPCWUaMjVNRNjJTCtyIBwMFarilDCSqtegQALZ8tLSK0hA6tLoETgCtIqFTApBRgymNek0LDCW09yQ3dfF5SkSodpTAh1A/wU7FpxByLj8xmh5M3RjCxoRJ9pzFCaRsAG+CcwDjoCc3Y7zKBh4DgyzkdKGyfRj+NEPeQpiRxPuoa4a4evnL2go5VsHZbjLUoyIF3vOreaw8SjTBKmDu94a7OgARV82zo/uqXl0uL/L6+wYGqZhRxkl9VLZmDeaNL9X2wosjypW1ZmuzhuGsZ5h+RgXjeetZal65maKG+11qAfAztuX7biE2y/G6HvAn40aj0ss/0E8KMwwA8W0meWEOjUUXHZ2JgyB/6yIgOX9VCmWDAxTFNVShuzr5/jFgxTi0qGvNAwmal4QHU4z9Q4krqD9VocS4ESWtyuip9CfrWo7qyQLAPuaWJzMnZh1VDL3TPrx6hwP91vwGoloPPt0Lv1Abl17xXcP+y3hs9p10ef9VofO4/JxY/BdP6kd4JvqGD5krOkdkc/6ByNQSUd+nUpvVYbyivJcsWXST1jS/9ZYN2zc54UTFt0k9+CN5jcomxVuOHUGcYobe+fsUQhUGanijvQePjPxfhocjE5+uv8aDq7t+gtFEp7LGeYwwRSdQ26CmWvM8WDk/dhCuW3hffxhqYqk2hVUp8b0GOlxLwmZTPsCG1ArKaYyfPiSLqFPPYaDGbyWA4FMuNCoCaQMxTRJb5H8TdoXFV3ccYyyZnmQ2s1Lkvr12+cgYy5UbpNm67ulScgM7tueyL/lqjhRN2ATpmBKEwDPy+Kj8JfYYbbLkkDnFb5UglDBismjBc5BP92dx18zpTRdDQORgJB2o4lG7nLHXz3Q62069dC3XgL+lmNDaKwDjbVRWu7DCRoZmEKqXYdgyD8jjSBiYMcc5AWbeVl/ODdpzWfXlyJsKEmXQMvBehktJLT5uWNVmXRpJALqThcmuSdf8TsMa/Jqhl2e1eltNi+rZnkAnTzBtI644aQ0Mq1RCZKxZzLoTAnKr16jQLGrHW8o6bKOCmHXOlqiu+hpXmNWkmnSQNZlpK7IPG779aClkycKh76YoEISr87m+2sSp3CKdtaOg3h5Vsgd//2U+u9Vax3514p9jl39k59hIr1MbpXiv2i7lxQc3jBjAFrkqF7UKEyk9QnKvNfU/OaiGbYKu6s8d2B/pswct1QVmDGLNywKqknYOywwHlNdBh1XMDBpBqLtt51kBUrhXW3eGMNK4HZ2p75Cf6r1V/OfeS+rr3h24K6F3ibpkgNAtBXUAhV5eHr+a4MrMC2BLAM5Xb6zjXVTJ2oDFMmjvkHjYAe3sP3Ae6DZrv76dSyDHzIRFAn+j2STiAkqXgFvKAhNEP4e1RMuNYWAdcAUFrINOsEouoEfmnXSuN7l6G7b8dxdQT59bPQwPANNFbgW6gmoQ7nTRH7qfkubTuRJmAKJU3Tb3PX1KUZxRPG5YWAHjPNcrBtmlm0PdkdKl9KhPbG+jnGus84vVf6LfwIjNVv4V/aK737e/f37u/d/zMZ+XIg0G3rAfc7V6a3rY+C2fWYadsW1A8QG3sGXgE6CneY8eLLDFtzhDpntJJb0GZDR6WxKm/1j3O29HbwY62ukYN2dRP1rRxXT6HMaJdC+0NaR+mstEVpN9RdlSWX5rfrgxfJ88Pk+ZNLg/is6W4lk/D8D1kV5fQfLgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "JarvisApiEndpointE029CAFE": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "JarvisApi93403720"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiUrl": {
+   "Description": "API Gateway URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "JarvisApi93403720"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "UserPoolId": {
+   "Description": "Cognito User Pool ID",
+   "Value": {
+    "Ref": "JarvisUserPool45CBB6EE"
+   }
+  },
+  "UserPoolClientId": {
+   "Description": "Cognito App Client ID",
+   "Value": {
+    "Ref": "JarvisAppClientC24775B1"
+   }
+  },
+  "IdentityPoolId": {
+   "Description": "Cognito Identity Pool ID",
+   "Value": {
+    "Ref": "JarvisIdentityPool"
+   }
+  },
+  "AudioBucketName": {
+   "Description": "S3 Audio Bucket Name",
+   "Value": {
+    "Ref": "JarvisAudioBucketA3CB9231"
+   }
+  },
+  "Region": {
+   "Description": "AWS Region",
+   "Value": "us-east-1"
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

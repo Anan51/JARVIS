@@ -1,0 +1,128 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, Switch } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { logout, getUser } from '../../services/auth';
+import { useNotifications } from '../../hooks/useNotifications';
+import { useContacts } from '../../hooks/useContacts';
+import { theme } from '../../constants/theme';
+
+export default function SettingsScreen() {
+  const [user, setUser] = useState<any>(null);
+  const { expoPushToken } = useNotifications();
+  const { hasPermission: contactsPermission, requestPermission: requestContacts } = useContacts();
+  const [notificationsEnabled, setNotificationsEnabled] = useState(!!expoPushToken);
+
+  useEffect(() => {
+    getUser().then(setUser).catch(() => {});
+  }, []);
+
+  async function handleLogout() {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: async () => {
+          await logout();
+          router.replace('/(auth)/login');
+        },
+      },
+    ]);
+  }
+
+  async function handleContactsPermission() {
+    const granted = await requestContacts();
+    if (!granted) {
+      Alert.alert('Permission Denied', 'Go to Settings to enable contacts access for JARVIS.');
+    }
+  }
+
+  return (
+    <ScrollView style={s.container} contentContainerStyle={s.content}>
+      {/* User Card */}
+      <View style={[s.card, s.userCard]}>
+        <LinearGradient colors={[theme.colors.primaryStart, theme.colors.primaryEnd]} style={s.avatar}>
+          <Text style={s.avatarText}>{user?.username?.[0]?.toUpperCase() || 'J'}</Text>
+        </LinearGradient>
+        <View style={s.userInfo}>
+          <Text style={s.userName}>{user?.username || 'Loading...'}</Text>
+          <Text style={s.userEmail}>{user?.signInDetails?.loginId || ''}</Text>
+        </View>
+      </View>
+
+      {/* Permissions Section */}
+      <Text style={s.sectionTitle}>Permissions</Text>
+      <View style={s.card}>
+        <SettingRow
+          icon="notifications"
+          title="Push Notifications"
+          subtitle={expoPushToken ? 'Registered' : 'Not registered'}
+          trailing={<Switch value={notificationsEnabled} trackColor={{ true: theme.colors.primary }} thumbColor="#fff" disabled />}
+        />
+        <View style={s.divider} />
+        <SettingRow
+          icon="people"
+          title="Contacts Access"
+          subtitle={contactsPermission ? 'Granted' : 'Not granted'}
+          onPress={contactsPermission ? undefined : handleContactsPermission}
+          trailing={
+            contactsPermission ? (
+              <Ionicons name="checkmark-circle" size={22} color={theme.colors.success} />
+            ) : (
+              <TouchableOpacity onPress={handleContactsPermission} style={s.grantBtn}>
+                <Text style={s.grantText}>Grant</Text>
+              </TouchableOpacity>
+            )
+          }
+        />
+      </View>
+
+
+      {/* Sign Out */}
+      <TouchableOpacity onPress={handleLogout} style={s.logoutButton} activeOpacity={0.7}>
+        <Ionicons name="log-out-outline" size={20} color={theme.colors.danger} />
+        <Text style={s.logoutText}>Sign Out</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+}
+
+function SettingRow({ icon, title, subtitle, trailing, onPress }: {
+  icon: string; title: string; subtitle: string; trailing?: React.ReactNode; onPress?: () => void;
+}) {
+  const Wrapper = onPress ? TouchableOpacity : View;
+  return (
+    <Wrapper onPress={onPress} style={s.row} activeOpacity={0.7}>
+      <Ionicons name={icon as any} size={22} color={theme.colors.primary} />
+      <View style={s.rowContent}>
+        <Text style={s.rowTitle}>{title}</Text>
+        <Text style={s.rowSub}>{subtitle}</Text>
+      </View>
+      {trailing}
+    </Wrapper>
+  );
+}
+
+const s = StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.colors.background },
+  content: { padding: 16, paddingBottom: 48 },
+  card: { backgroundColor: theme.colors.surfaceElevated, borderRadius: 16, padding: 16, marginBottom: 24, borderWidth: 1, borderColor: theme.colors.border },
+  userCard: { flexDirection: 'row', alignItems: 'center' },
+  avatar: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', marginRight: 16 },
+  avatarText: { color: '#fff', fontSize: 20, fontWeight: '700' },
+  userInfo: { flex: 1 },
+  userName: { fontSize: 18, fontWeight: '600', color: theme.colors.textPrimary },
+  userEmail: { fontSize: 13, color: theme.colors.textMuted, marginTop: 2 },
+  sectionTitle: { fontSize: 13, fontWeight: '600', color: theme.colors.textMuted, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 4 },
+  rowContent: { flex: 1 },
+  rowTitle: { fontSize: 15, fontWeight: '500', color: theme.colors.textPrimary },
+  rowSub: { fontSize: 12, color: theme.colors.textMuted, marginTop: 1 },
+  divider: { height: 1, backgroundColor: theme.colors.border, marginVertical: 12 },
+  grantBtn: { backgroundColor: theme.colors.primaryMuted, paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8 },
+  grantText: { color: theme.colors.primary, fontSize: 13, fontWeight: '600' },
+  logoutButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, backgroundColor: theme.colors.dangerMuted, borderRadius: 12, marginTop: 8 },
+  logoutText: { color: theme.colors.danger, fontSize: 16, fontWeight: '600' },
+});

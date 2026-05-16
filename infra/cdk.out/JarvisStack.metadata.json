@@ -1,0 +1,3627 @@
+{
+  "/JarvisStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "bucketName": "*",
+        "removalPolicy": "destroy",
+        "autoDeleteObjects": true,
+        "lifecycleRules": [
+          {
+            "prefix": "*"
+          },
+          {
+            "prefix": "*"
+          }
+        ],
+        "cors": [
+          {
+            "allowedMethods": [
+              "PUT",
+              "GET"
+            ],
+            "allowedOrigins": "*",
+            "allowedHeaders": "*",
+            "maxAge": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addCorsRule": [
+          {
+            "allowedMethods": [
+              "PUT",
+              "GET"
+            ],
+            "allowedOrigins": "*",
+            "allowedHeaders": "*",
+            "maxAge": "*"
+          },
+          "*",
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addLifecycleRule": [
+          {
+            "prefix": "*"
+          },
+          "*",
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addLifecycleRule": [
+          {
+            "prefix": "*"
+          },
+          "*",
+          "*"
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+    {
+      "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+      "data": true
+    }
+  ],
+  "/JarvisStack/JarvisTasksTable": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "tableName": "*",
+        "partitionKey": {
+          "name": "*",
+          "type": "S"
+        },
+        "sortKey": {
+          "name": "*",
+          "type": "S"
+        },
+        "billingMode": "PAY_PER_REQUEST",
+        "removalPolicy": "destroy",
+        "pointInTimeRecovery": true
+      }
+    },
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "JarvisTasksTableBA7C51BE"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisMemosTable": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "tableName": "*",
+        "partitionKey": {
+          "name": "*",
+          "type": "S"
+        },
+        "sortKey": {
+          "name": "*",
+          "type": "S"
+        },
+        "billingMode": "PAY_PER_REQUEST",
+        "removalPolicy": "destroy"
+      }
+    },
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "JarvisMemosTable6E8B8089"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisPushTokensTable": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "tableName": "*",
+        "partitionKey": {
+          "name": "*",
+          "type": "S"
+        },
+        "sortKey": {
+          "name": "*",
+          "type": "S"
+        },
+        "billingMode": "PAY_PER_REQUEST",
+        "removalPolicy": "destroy"
+      }
+    },
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "JarvisPushTokensTable52EE0B84"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisUserPool": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "userPoolName": "*",
+        "selfSignUpEnabled": true,
+        "signInAliases": {
+          "email": true
+        },
+        "autoVerify": {
+          "email": true
+        },
+        "standardAttributes": {},
+        "passwordPolicy": {
+          "minLength": "*",
+          "requireLowercase": true,
+          "requireUppercase": true,
+          "requireDigits": true,
+          "requireSymbols": false
+        },
+        "accountRecovery": 2,
+        "removalPolicy": "destroy"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisAppClient": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "userPool": "*",
+        "userPoolClientName": "*",
+        "authFlows": {
+          "userPassword": true,
+          "userSrp": true
+        },
+        "generateSecret": false
+      }
+    }
+  ],
+  "/JarvisStack/JarvisIdentityPool": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisIdentityPool"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:111:26)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/CognitoAuthRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/IdentityPoolRoles": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IdentityPoolRoles"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:146:5)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisSchedulerGroup": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisSchedulerGroup"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:156:28)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        },
+        "code": "*"
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        }
+      }
+    }
+  ],
+  "/JarvisStack/SchedulerRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "roleName": "*",
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/MemoUploadFn": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        },
+        "code": "*"
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        }
+      }
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        },
+        "code": "*"
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        }
+      }
+    }
+  ],
+  "/JarvisStack/TaskManagerFn": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        },
+        "code": "*"
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        }
+      }
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        },
+        "code": "*"
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {}
+    },
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "functionName": "*",
+        "runtime": "*",
+        "handler": "*",
+        "entry": "*",
+        "projectRoot": "*",
+        "depsLockFilePath": "*",
+        "timeout": "*",
+        "memorySize": "*",
+        "environment": "*",
+        "bundling": {
+          "externalModules": "*",
+          "minify": true,
+          "sourceMap": true
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "restApiName": "*",
+        "description": "*",
+        "defaultCorsPreflightOptions": {
+          "allowOrigins": "*",
+          "allowMethods": "*",
+          "allowHeaders": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisAuthorizer": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/ApiUrl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiUrl"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:400:5)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/UserPoolId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:405:5)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/UserPoolClientId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolClientId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:410:5)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/IdentityPoolId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IdentityPoolId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:415:5)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/AudioBucketName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AudioBucketName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:420:5)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/Region": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Region"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:425:5)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals, @cspotcode/source-map-support...",
+        "(no user code in 9007199254740991 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/JarvisStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals, @cspotcode/source-map-support...",
+        "(no user code in 9007199254740991 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAudioBucketA3CB9231"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:26:25)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketAutoDeleteObjects"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/Policy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "bucket": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/AutoDeleteObjectsCustomResource": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/AllowBucketNotificationsToJarvisStackMemoProcessorFn06178638": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAudioBucketAllowBucketNotificationsToJarvisStackMemoProcessorFn0617863897C3A58A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addEventNotification in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:297:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:26:25)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:26:25)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisTasksTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisTasksTableBA7C51BE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Table2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:53:24)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisTasksTable/ScalingRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/JarvisMemosTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisMemosTable6E8B8089"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Table2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:62:24)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisMemosTable/ScalingRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/JarvisPushTokensTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisPushTokensTable52EE0B84"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Table2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:70:29)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisPushTokensTable/ScalingRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/JarvisUserPool/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisUserPool45CBB6EE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPool2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:81:22)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisAppClient/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAppClientC24775B1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPoolClient2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:101:28)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/CognitoAuthRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CognitoAuthRole7B7E27C0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Role2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:123:31)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/CognitoAuthRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/ServiceRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        },
+        "managedPolicies": [
+          {
+            "managedPolicyArn": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "NotificationSenderFnDE7351F3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:185:34)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/LogGroup": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "logGroupName": "*"
+      }
+    }
+  ],
+  "/JarvisStack/SchedulerRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SchedulerRole59E73443"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Role2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:202:27)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/SchedulerRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/ServiceRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        },
+        "managedPolicies": [
+          {
+            "managedPolicyArn": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoUploadFn86D880CA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:217:26)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/LogGroup": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "logGroupName": "*"
+      }
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/ServiceRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        },
+        "managedPolicies": [
+          {
+            "managedPolicyArn": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoProcessorFn61EED2DC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:236:29)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/LogGroup": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "logGroupName": "*"
+      }
+    }
+  ],
+  "/JarvisStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addManagedPolicy": [
+          {
+            "managedPolicyArn": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addEventNotification in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:297:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/ServiceRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        },
+        "managedPolicies": [
+          {
+            "managedPolicyArn": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TaskManagerFn257A5BAA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:306:27)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/LogGroup": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "logGroupName": "*"
+      }
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/ServiceRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        },
+        "managedPolicies": [
+          {
+            "managedPolicyArn": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PushTokenManagerFn7051253C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:333:32)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/LogGroup": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "logGroupName": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApi93403720"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:351:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Deployment": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "description": "*",
+        "api": "*",
+        "retainDeployments": "*"
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/DeploymentStage.prod": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "deployment": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Endpoint": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApiEndpointE029CAFE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:351:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/JarvisAuthorizer/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAuthorizer6D5D45D1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new CognitoUserPoolsAuthorizer2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:362:24)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals, @cspotcode/source-map-support...",
+        "(no user code in 9007199254740991 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAudioBucketPolicyD1069FB0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:26:25)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketPolicyStatements"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/AutoDeleteObjectsCustomResource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAudioBucketAutoDeleteObjectsCustomResourceF1AEAF79"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:26:25)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/Notifications/HandlerPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "statements": "*"
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/Notifications/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAudioBucketNotifications0B8A1531"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addEventNotification in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:297:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/CognitoAuthRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CognitoAuthRoleDefaultPolicy942426C8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:139:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "NotificationSenderFnServiceRoleC52C0793"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:185:34)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/ServiceRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/Code/AssetBucket": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/LogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "NotificationSenderFnLogGroup2E4F057A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:185:34)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/SchedulerRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SchedulerRoleDefaultPolicy66F774B8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:207:19)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoUploadFnServiceRole5B2FBBB1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:217:26)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/ServiceRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/Code/AssetBucket": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/LogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoUploadFnLogGroup6E35AE53"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:217:26)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoProcessorFnServiceRole530AB683"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:236:29)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/ServiceRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/Code/AssetBucket": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/LogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoProcessorFnLogGroupFE580DCB"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:236:29)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addEventNotification in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:297:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TaskManagerFnServiceRoleE3680006"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:306:27)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/ServiceRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/Code/AssetBucket": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/LogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TaskManagerFnLogGroup590E3CD2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:306:27)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PushTokenManagerFnServiceRole75F74C6A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:333:32)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/ServiceRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/Code/AssetBucket": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/LogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PushTokenManagerFnLogGroupCF946C76"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:333:32)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Deployment/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApiDeployment5331318A38bd9ab4a38ac2f8eea9660583aebaca"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:351:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/DeploymentStage.prod/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApiDeploymentStageprod1171D6F5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:351:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "parent": "*",
+        "pathPart": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "parent": "*",
+        "pathPart": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "parent": "*",
+        "pathPart": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisAudioBucket/Notifications/HandlerPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisAudioBucketNotificationsHandlerPolicy83AC22B2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addEventNotification in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:297:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/NotificationSenderFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "NotificationSenderFnServiceRoleDefaultPolicyC8944C63"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantReadData in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:198:21)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoUploadFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoUploadFnServiceRoleDefaultPolicy247AAD7A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantPut in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:230:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/MemoProcessorFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MemoProcessorFnServiceRoleDefaultPolicyA14A69A1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantRead in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:253:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/TaskManagerFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TaskManagerFnServiceRoleDefaultPolicy56A23763"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantReadWriteData in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:319:16)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/PushTokenManagerFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PushTokenManagerFnServiceRoleDefaultPolicyC818F369"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantReadWriteData in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:346:21)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApiOPTIONS5508EA4F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:351:17)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemoDF536499"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:373:35)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/POST": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "parent": "*",
+        "pathPart": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksD4EEA0BA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:382:36)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/GET": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/POST": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "parent": "*",
+        "pathPart": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtoken3C959346"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:392:40)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/POST": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/GET": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/DELETE": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemoOPTIONSF0F9D74A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:373:35)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..memo": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemoPOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTmemo4070D776"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:374:18)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..memo": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemoPOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTmemo208805FF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:374:18)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemoPOST53B2AB68"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:374:18)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdAA003036"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:377:41)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "parent": "*",
+        "pathPart": "*"
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksOPTIONSAC23AF06"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:382:36)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/GET/ApiPermission.JarvisStackJarvisApiCA8D02EC.GET..tasks": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksGETApiPermissionJarvisStackJarvisApiCA8D02ECGETtasksC751A2BE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:19)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/GET/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.GET..tasks": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksGETApiPermissionTestJarvisStackJarvisApiCA8D02ECGETtasks211BCE25"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:19)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksGET0F84EB33"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:19)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..tasks": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksPOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTtasksA59ABFD5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:384:19)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..tasks": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksPOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTtasks8A595F74"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:384:19)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitasksPOST3B20DEE6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:384:19)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdB1C9ACA9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:387:42)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/PUT": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/DELETE": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenOPTIONS189CD342"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:392:40)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..push-token": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenPOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTpushtokenE5B25955"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..push-token": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenPOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTpushtoken05491FEF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenPOST2A0BD81B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/GET/ApiPermission.JarvisStackJarvisApiCA8D02EC.GET..push-token": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenGETApiPermissionJarvisStackJarvisApiCA8D02ECGETpushtoken3F56FE51"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:394:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/GET/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.GET..push-token": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenGETApiPermissionTestJarvisStackJarvisApiCA8D02ECGETpushtokenE4E875E5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:394:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenGETA18181C3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:394:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/DELETE/ApiPermission.JarvisStackJarvisApiCA8D02EC.DELETE..push-token": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenDELETEApiPermissionJarvisStackJarvisApiCA8D02ECDELETEpushtokenC3BDA7B9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:395:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/DELETE/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.DELETE..push-token": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenDELETEApiPermissionTestJarvisStackJarvisApiCA8D02ECDELETEpushtokenD20D8D2D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:395:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/push-token/DELETE/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApipushtokenDELETE3ED96F1D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:395:23)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdOPTIONSD1946B8F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:377:41)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdstatus9F4CD7F0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:378:47)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdOPTIONS6E21554C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:387:42)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/PUT/ApiPermission.JarvisStackJarvisApiCA8D02EC.PUT..tasks.{taskId}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdPUTApiPermissionJarvisStackJarvisApiCA8D02ECPUTtaskstaskIdD59956C4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:20)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/PUT/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.PUT..tasks.{taskId}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdPUTApiPermissionTestJarvisStackJarvisApiCA8D02ECPUTtaskstaskId7B3FC593"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:20)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/PUT/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdPUT3AB6059E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:20)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/DELETE/ApiPermission.JarvisStackJarvisApiCA8D02EC.DELETE..tasks.{taskId}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdDELETEApiPermissionJarvisStackJarvisApiCA8D02ECDELETEtaskstaskId146ACBAC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:389:20)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/DELETE/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.DELETE..tasks.{taskId}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdDELETEApiPermissionTestJarvisStackJarvisApiCA8D02ECDELETEtaskstaskId45B99949"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:389:20)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/tasks/{taskId}/DELETE/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApitaskstaskIdDELETE71F4D4F3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:389:20)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdstatusOPTIONS2C04D906"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:378:47)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET/ApiPermission.JarvisStackJarvisApiCA8D02EC.GET..memo.{memoId}.status": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdstatusGETApiPermissionJarvisStackJarvisApiCA8D02ECGETmemomemoIdstatusF66DFD0F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:379:24)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.GET..memo.{memoId}.status": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdstatusGETApiPermissionTestJarvisStackJarvisApiCA8D02ECGETmemomemoIdstatusB19904E0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:379:24)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdstatusGET0C6D31D0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:379:24)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ]
+}

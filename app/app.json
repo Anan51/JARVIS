@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "JARVIS",
+    "slug": "jarvis",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "scheme": "jarvis",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0e1a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jarvis.voiceassistant",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "JARVIS needs microphone access to record voice memos.",
+        "NSContactsUsageDescription": "JARVIS needs contacts access to send messages to your contacts."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0e1a"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.jarvis.voiceassistant",
+      "permissions": [
+        "RECORD_AUDIO",
+        "READ_CONTACTS",
+        "SEND_SMS",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "SCHEDULE_EXACT_ALARM",
+        "com.android.alarm.permission.SET_ALARM"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "sounds": []
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "JARVIS needs access to your contacts to send messages."
+        }
+      ]
+    ]
+  }
+}

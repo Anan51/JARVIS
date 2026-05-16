@@ -1,0 +1,26 @@
+{
+  "name": "jarvis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anan51/JARVIS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Anan51/JARVIS/issues"
+  },
+  "homepage": "https://github.com/Anan51/JARVIS#readme",
+  "devDependencies": {
+    "@types/node": "^25.8.0",
+    "esbuild": "^0.28.0",
+    "typescript": "^6.0.3"
+  }
+}
