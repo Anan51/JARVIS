@@ -11,24 +11,30 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function handleSignup() {
+    setErrorMessage('');
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all required fields');
+      setErrorMessage('Please fill in all required fields');
       return;
     }
     if (password.length < 8) {
-      Alert.alert('Error', 'Password must be at least 8 characters');
+      setErrorMessage('Password must be at least 8 characters');
       return;
     }
     setLoading(true);
     try {
-      const result = await register(email.trim(), password, name.trim() || undefined);
-      if (result.nextStep?.signUpStep === 'CONFIRM_SIGN_UP') {
-        router.push({ pathname: '/(auth)/confirm', params: { email: email.trim() } });
+      await register(email.trim(), password, name.trim() || undefined);
+      if (Platform.OS === 'web') {
+        window.alert('Account created successfully! Please sign in to continue.');
+      } else {
+        Alert.alert('Success', 'Account created successfully! Please sign in to continue.');
       }
+      router.replace('/(auth)/login');
     } catch (err: any) {
-      Alert.alert('Sign Up Failed', err.message || 'Could not create account');
+      console.error('Signup error:', err);
+      setErrorMessage(err.message || 'Could not create account');
     } finally {
       setLoading(false);
     }
@@ -45,6 +51,8 @@ export default function SignupScreen() {
 
         <Text style={s.title}>Create Account</Text>
         <Text style={s.subtitle}>Join JARVIS to get started</Text>
+
+        {errorMessage ? <Text style={s.errorText}>{errorMessage}</Text> : null}
 
         <View style={s.form}>
           <View style={s.inputContainer}>
@@ -83,6 +91,7 @@ const s = StyleSheet.create({
   header: { position: 'absolute', top: 60, left: 0 },
   title: { fontSize: 32, fontWeight: '700', color: theme.colors.textPrimary, marginBottom: 4 },
   subtitle: { fontSize: 14, color: theme.colors.textSecondary, marginBottom: 32 },
+  errorText: { color: theme.colors.danger, marginBottom: 16, textAlign: 'center', fontSize: 14 },
   form: { gap: 16 },
   inputContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surfaceElevated, borderRadius: 12, borderWidth: 1, borderColor: theme.colors.border, paddingHorizontal: 16, height: 52 },
   inputIcon: { marginRight: 12 },

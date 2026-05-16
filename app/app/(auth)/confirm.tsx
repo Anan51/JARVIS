@@ -3,38 +3,58 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingVi
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { confirmRegistration, resendConfirmation } from '../../services/auth';
+import { confirmRegistration, resendConfirmation, login } from '../../services/auth';
 import { theme } from '../../constants/theme';
 
 export default function ConfirmScreen() {
-  const { email } = useLocalSearchParams<{ email: string }>();
+  const { email, password } = useLocalSearchParams<{ email: string; password?: string }>();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function handleConfirm() {
+    setErrorMessage('');
     if (!code || code.length < 6) {
-      Alert.alert('Error', 'Please enter the 6-digit verification code');
+      setErrorMessage('Please enter the 6-digit verification code');
       return;
     }
     setLoading(true);
     try {
       await confirmRegistration(email!, code);
-      Alert.alert('Success', 'Account verified! Please sign in.', [
-        { text: 'OK', onPress: () => router.replace('/(auth)/login') },
-      ]);
+      if (password) {
+        await login(email!, password);
+        if (Platform.OS === 'web') {
+          window.location.replace('/');
+        } else {
+          router.replace('/(tabs)');
+        }
+      } else {
+        if (Platform.OS === 'web') {
+          window.alert('Account verified! Please sign in.');
+        } else {
+          Alert.alert('Success', 'Account verified! Please sign in.');
+        }
+        router.replace('/(auth)/login');
+      }
     } catch (err: any) {
-      Alert.alert('Verification Failed', err.message || 'Invalid code');
+      console.error('Confirm error:', err);
+      setErrorMessage(err.message || 'Invalid code');
     } finally {
       setLoading(false);
     }
   }
 
   async function handleResend() {
+    setErrorMessage('');
     try {
       await resendConfirmation(email!);
-      Alert.alert('Success', 'Verification code resent to your email');
+      if (Platform.OS === 'web') {
+        window.alert('Verification code resent to your email');
+      } else {
+        Alert.alert('Success', 'Verification code resent to your email');
+      }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'Could not resend code');
+      setErrorMessage(err.message || 'Could not resend code');
     }
   }
 
@@ -46,6 +66,8 @@ export default function ConfirmScreen() {
         </View>
         <Text style={s.title}>Verify Your Email</Text>
         <Text style={s.subtitle}>We sent a code to {email}</Text>
+
+        {errorMessage ? <Text style={s.errorText}>{errorMessage}</Text> : null}
 
         <View style={s.inputContainer}>
           <TextInput style={s.input} placeholder="000000" placeholderTextColor={theme.colors.textMuted} value={code} onChangeText={setCode} keyboardType="number-pad" maxLength={6} textAlign="center" />
@@ -71,6 +93,7 @@ const s = StyleSheet.create({
   iconWrap: { alignItems: 'center', marginBottom: 16 },
   title: { fontSize: 28, fontWeight: '700', color: theme.colors.textPrimary, textAlign: 'center', marginBottom: 4 },
   subtitle: { fontSize: 14, color: theme.colors.textSecondary, textAlign: 'center', marginBottom: 32 },
+  errorText: { color: theme.colors.danger, marginBottom: 16, textAlign: 'center', fontSize: 14 },
   inputContainer: { backgroundColor: theme.colors.surfaceElevated, borderRadius: 12, borderWidth: 1, borderColor: theme.colors.border, height: 56, justifyContent: 'center', marginBottom: 16 },
   input: { color: theme.colors.textPrimary, fontSize: 28, fontWeight: '600', letterSpacing: 8 },
   button: { height: 52, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
