@@ -687,7 +687,7 @@
     {
       "type": "aws:cdk:creationStack",
       "data": [
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:400:5)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:404:5)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -701,7 +701,7 @@
     {
       "type": "aws:cdk:creationStack",
       "data": [
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:405:5)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:409:5)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -715,7 +715,7 @@
     {
       "type": "aws:cdk:creationStack",
       "data": [
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:410:5)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:414:5)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -729,7 +729,7 @@
     {
       "type": "aws:cdk:creationStack",
       "data": [
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:415:5)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:419:5)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -743,7 +743,7 @@
     {
       "type": "aws:cdk:creationStack",
       "data": [
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:420:5)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:424:5)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -757,7 +757,7 @@
     {
       "type": "aws:cdk:creationStack",
       "data": [
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:425:5)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:429:5)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -1826,6 +1826,38 @@
           {}
         ]
       }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToLogicalId": [
+          {}
+        ]
+      }
     }
   ],
   "/JarvisStack/JarvisApi/DeploymentStage.prod": [
@@ -2482,7 +2514,7 @@
   "/JarvisStack/JarvisApi/Deployment/Resource": [
     {
       "type": "aws:cdk:logicalId",
-      "data": "JarvisApiDeployment5331318A38bd9ab4a38ac2f8eea9660583aebaca"
+      "data": "JarvisApiDeployment5331318A26c185a5fa8a27b3cd794d6403e5c87a"
     },
     {
       "type": "aws:cdk:creationStack",
@@ -2758,7 +2790,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...RootResource.addResource in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:382:36)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:386:36)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -2845,7 +2877,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...RootResource.addResource in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:392:40)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:396:40)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3047,6 +3079,15 @@
       }
     }
   ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "parent": "*",
+        "pathPart": "*"
+      }
+    }
+  ],
   "/JarvisStack/JarvisApi/Default/tasks/OPTIONS/Resource": [
     {
       "type": "aws:cdk:logicalId",
@@ -3056,7 +3097,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...RootResource.addResource in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:382:36)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:386:36)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3071,7 +3112,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:19)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:387:19)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3086,7 +3127,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:19)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:387:19)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3101,7 +3142,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:19)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:387:19)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3116,7 +3157,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:384:19)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:19)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3131,7 +3172,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:384:19)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:19)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3146,7 +3187,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:384:19)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:19)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3161,7 +3202,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addResource in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:387:42)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:391:42)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3239,7 +3280,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...RootResource.addResource in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:392:40)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:396:40)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3254,7 +3295,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:397:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3269,7 +3310,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:397:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3284,7 +3325,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:397:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3299,7 +3340,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:394:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:398:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3314,7 +3355,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:394:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:398:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3329,7 +3370,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:394:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:398:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3344,7 +3385,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:395:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:399:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3359,7 +3400,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:395:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:399:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3374,7 +3415,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:395:23)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:399:23)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3459,6 +3500,70 @@
       }
     }
   ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdanalyze6ADE4715"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:382:48)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/OPTIONS": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": {
+            "authorizerId": "*",
+            "authorizationType": "*"
+          },
+          "apiKeyRequired": false,
+          "authorizationType": "*",
+          "methodResponses": [
+            {
+              "statusCode": "*",
+              "responseParameters": "*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addMethodResponse": [
+          {
+            "statusCode": "*",
+            "responseParameters": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/POST": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "resource": "*",
+        "httpMethod": "*",
+        "integration": "*",
+        "options": {
+          "authorizer": "*",
+          "authorizationType": "*"
+        }
+      }
+    }
+  ],
   "/JarvisStack/JarvisApi/Default/tasks/{taskId}/OPTIONS/Resource": [
     {
       "type": "aws:cdk:logicalId",
@@ -3468,7 +3573,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addResource in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:387:42)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:391:42)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3483,7 +3588,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:20)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:392:20)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3498,7 +3603,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:20)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:392:20)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3513,7 +3618,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:388:20)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:392:20)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3528,7 +3633,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:389:20)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:20)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3543,7 +3648,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:389:20)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:20)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3558,7 +3663,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
-        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:389:20)",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:393:20)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]
@@ -3619,6 +3724,66 @@
       "data": [
         "...WrappedClass.addMethod in aws-cdk-lib...",
         "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:379:24)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdanalyzeOPTIONS025992FD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addResource in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:382:48)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..memo.{memoId}.analyze": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdanalyzePOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTmemomemoIdanalyzeB8CB5F8F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:25)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..memo.{memoId}.analyze": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdanalyzePOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTmemomemoIdanalyze21791EC6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:25)",
+        "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JarvisApimemomemoIdanalyzePOST3B8CEDE3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addMethod in aws-cdk-lib...",
+        "new InfraStack (/Users/anansi/JARVIS/infra/lib/infra-stack.ts:383:25)",
         "<anonymous> (/Users/anansi/JARVIS/infra/bin/infra.ts:6:1)",
         "...node internals, ts-node, ts-node, ts-node..."
       ]

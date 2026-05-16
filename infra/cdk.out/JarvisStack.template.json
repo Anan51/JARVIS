@@ -4,18 +4,7 @@
   "JarvisAudioBucketA3CB9231": {
    "Type": "AWS::S3::Bucket",
    "Properties": {
-    "BucketName": {
-     "Fn::Join": [
-      "",
-      [
-       "jarvis-audio-",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       "-us-east-1"
-      ]
-     ]
-    },
+    "BucketName": "jarvis-audio-381491991730-us-east-1",
     "CorsConfiguration": {
      "CorsRules": [
       {
@@ -226,9 +215,7 @@
      ]
     },
     "Principal": "s3.amazonaws.com",
-    "SourceAccount": {
-     "Ref": "AWS::AccountId"
-    },
+    "SourceAccount": "381491991730",
     "SourceArn": {
      "Fn::GetAtt": [
       "JarvisAudioBucketA3CB9231",
@@ -269,9 +256,7 @@
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
-     },
+     "S3Bucket": "cdk-hnb659fds-assets-381491991730-us-east-1",
      "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
     },
     "Timeout": 900,
@@ -302,7 +287,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "JarvisStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
-    "aws:asset:path": "/private/var/folders/zg/0hw73kkx68d6vs7fs_n63gxw0000gn/T/cdk-custom-resourceQVuTLE",
+    "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
     "aws:asset:property": "Code"
    }
   },
@@ -716,10 +701,8 @@
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
-     },
-     "S3Key": "c5e6b77984c1a9c2712fccaa024822ead60491fb486535dec2f793100420d3a4.zip"
+     "S3Bucket": "cdk-hnb659fds-assets-381491991730-us-east-1",
+     "S3Key": "4b2754a8a1820ba7f2c53e03a3d86eaeaa5f3ce4eb6c1e072b03ae582033014f.zip"
     },
     "Environment": {
      "Variables": {
@@ -757,7 +740,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "JarvisStack/NotificationSenderFn/Resource",
-    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.c5e6b77984c1a9c2712fccaa024822ead60491fb486535dec2f793100420d3a4",
+    "aws:asset:path": "asset.4b2754a8a1820ba7f2c53e03a3d86eaeaa5f3ce4eb6c1e072b03ae582033014f",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }
@@ -932,10 +915,8 @@
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
-     },
-     "S3Key": "7636056e5280a5f5eb1bf15f43585d87a8dab358ccdbcb658e15cdb6309712d3.zip"
+     "S3Bucket": "cdk-hnb659fds-assets-381491991730-us-east-1",
+     "S3Key": "52866fe0f5c846ea8ea7359a48536576c2a28385ffaa14c985fed0abb70b5f5d.zip"
     },
     "Environment": {
      "Variables": {
@@ -973,7 +954,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "JarvisStack/MemoUploadFn/Resource",
-    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.7636056e5280a5f5eb1bf15f43585d87a8dab358ccdbcb658e15cdb6309712d3",
+    "aws:asset:path": "asset.52866fe0f5c846ea8ea7359a48536576c2a28385ffaa14c985fed0abb70b5f5d",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }
@@ -1131,18 +1112,7 @@
       {
        "Action": "scheduler:CreateSchedule",
        "Effect": "Allow",
-       "Resource": {
-        "Fn::Join": [
-         "",
-         [
-          "arn:aws:scheduler:us-east-1:",
-          {
-           "Ref": "AWS::AccountId"
-          },
-          ":schedule/jarvis-schedules/*"
-         ]
-        ]
-       }
+       "Resource": "arn:aws:scheduler:us-east-1:381491991730:schedule/jarvis-schedules/*"
       },
       {
        "Action": "iam:PassRole",
@@ -1172,10 +1142,8 @@
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
-     },
-     "S3Key": "b9d52ff3db3a741319885cf8b49a1609ad631db0576a27caec54f9fd5c50029b.zip"
+     "S3Bucket": "cdk-hnb659fds-assets-381491991730-us-east-1",
+     "S3Key": "0aff6ff8ca64f71cb0cfc8ffc0c2a7482b1d84e4db554b8dc3660a5a2c778d71.zip"
     },
     "Environment": {
      "Variables": {
@@ -1225,7 +1193,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "JarvisStack/MemoProcessorFn/Resource",
-    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.b9d52ff3db3a741319885cf8b49a1609ad631db0576a27caec54f9fd5c50029b",
+    "aws:asset:path": "asset.0aff6ff8ca64f71cb0cfc8ffc0c2a7482b1d84e4db554b8dc3660a5a2c778d71",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }
@@ -1394,18 +1362,7 @@
       {
        "Action": "scheduler:DeleteSchedule",
        "Effect": "Allow",
-       "Resource": {
-        "Fn::Join": [
-         "",
-         [
-          "arn:aws:scheduler:us-east-1:",
-          {
-           "Ref": "AWS::AccountId"
-          },
-          ":schedule/jarvis-schedules/*"
-         ]
-        ]
-       }
+       "Resource": "arn:aws:scheduler:us-east-1:381491991730:schedule/jarvis-schedules/*"
       }
      ],
      "Version": "2012-10-17"
@@ -1425,10 +1382,8 @@
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
-     },
-     "S3Key": "c408ad24eea56b911cbee72fd997e57b393795c3305673beb66709d608a9b9ca.zip"
+     "S3Bucket": "cdk-hnb659fds-assets-381491991730-us-east-1",
+     "S3Key": "e4ad8f7a5abb204ceee826214fdef60151d99a29eeada7d538d2e1e42e9f9d22.zip"
     },
     "Environment": {
      "Variables": {
@@ -1466,7 +1421,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "JarvisStack/TaskManagerFn/Resource",
-    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.c408ad24eea56b911cbee72fd997e57b393795c3305673beb66709d608a9b9ca",
+    "aws:asset:path": "asset.e4ad8f7a5abb204ceee826214fdef60151d99a29eeada7d538d2e1e42e9f9d22",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }
@@ -1573,10 +1528,8 @@
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-us-east-1"
-     },
-     "S3Key": "2bebe5ab57e5a951d90a75482a5d97e442884828ecd7be128fbc28a9cc2782d9.zip"
+     "S3Bucket": "cdk-hnb659fds-assets-381491991730-us-east-1",
+     "S3Key": "086d5c86e093dad756ca60990092d8e28dc4b8e9462b7697173ff474699d5e77.zip"
     },
     "Environment": {
      "Variables": {
@@ -1614,7 +1567,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "JarvisStack/PushTokenManagerFn/Resource",
-    "aws:asset:path": "/Users/anansi/JARVIS/infra/cdk.out/asset.2bebe5ab57e5a951d90a75482a5d97e442884828ecd7be128fbc28a9cc2782d9",
+    "aws:asset:path": "asset.086d5c86e093dad756ca60990092d8e28dc4b8e9462b7697173ff474699d5e77",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }
@@ -1651,7 +1604,7 @@
     "aws:cdk:path": "JarvisStack/JarvisApi/Resource"
    }
   },
-  "JarvisApiDeployment5331318A38bd9ab4a38ac2f8eea9660583aebaca": {
+  "JarvisApiDeployment5331318A26c185a5fa8a27b3cd794d6403e5c87a": {
    "Type": "AWS::ApiGateway::Deployment",
    "Properties": {
     "Description": "JARVIS Voice Assistant API",
@@ -1660,6 +1613,9 @@
     }
    },
    "DependsOn": [
+    "JarvisApimemomemoIdanalyzeOPTIONS025992FD",
+    "JarvisApimemomemoIdanalyzePOST3B8CEDE3",
+    "JarvisApimemomemoIdanalyze6ADE4715",
     "JarvisApimemomemoIdOPTIONSD1946B8F",
     "JarvisApimemomemoIdAA003036",
     "JarvisApimemomemoIdstatusGET0C6D31D0",
@@ -1693,7 +1649,7 @@
    "Type": "AWS::ApiGateway::Stage",
    "Properties": {
     "DeploymentId": {
-     "Ref": "JarvisApiDeployment5331318A38bd9ab4a38ac2f8eea9660583aebaca"
+     "Ref": "JarvisApiDeployment5331318A26c185a5fa8a27b3cd794d6403e5c87a"
     },
     "RestApiId": {
      "Ref": "JarvisApi93403720"
@@ -1826,11 +1782,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -1862,11 +1814,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2048,11 +1996,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2084,11 +2028,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2137,6 +2077,162 @@
    },
    "Metadata": {
     "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/status/GET/Resource"
+   }
+  },
+  "JarvisApimemomemoIdanalyze6ADE4715": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "JarvisApimemomemoIdAA003036"
+    },
+    "PathPart": "analyze",
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/Resource"
+   }
+  },
+  "JarvisApimemomemoIdanalyzeOPTIONS025992FD": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "JarvisApimemomemoIdanalyze6ADE4715"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/OPTIONS/Resource"
+   }
+  },
+  "JarvisApimemomemoIdanalyzePOSTApiPermissionJarvisStackJarvisApiCA8D02ECPOSTmemomemoIdanalyzeB8CB5F8F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MemoProcessorFn61EED2DC",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:381491991730:",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/",
+       {
+        "Ref": "JarvisApiDeploymentStageprod1171D6F5"
+       },
+       "/POST/memo/*/analyze"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/POST/ApiPermission.JarvisStackJarvisApiCA8D02EC.POST..memo.{memoId}.analyze"
+   }
+  },
+  "JarvisApimemomemoIdanalyzePOSTApiPermissionTestJarvisStackJarvisApiCA8D02ECPOSTmemomemoIdanalyze21791EC6": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MemoProcessorFn61EED2DC",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:381491991730:",
+       {
+        "Ref": "JarvisApi93403720"
+       },
+       "/test-invoke-stage/POST/memo/*/analyze"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/POST/ApiPermission.Test.JarvisStackJarvisApiCA8D02EC.POST..memo.{memoId}.analyze"
+   }
+  },
+  "JarvisApimemomemoIdanalyzePOST3B8CEDE3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "JarvisAuthorizer6D5D45D1"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "MemoProcessorFn61EED2DC",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "JarvisApimemomemoIdanalyze6ADE4715"
+    },
+    "RestApiId": {
+     "Ref": "JarvisApi93403720"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "JarvisStack/JarvisApi/Default/memo/{memoId}/analyze/POST/Resource"
    }
   },
   "JarvisApitasksD4EEA0BA": {
@@ -2215,11 +2311,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2251,11 +2343,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2321,11 +2409,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2357,11 +2441,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2485,11 +2565,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2521,11 +2597,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2591,11 +2663,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2627,11 +2695,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2758,11 +2822,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2794,11 +2854,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2864,11 +2920,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2900,11 +2952,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -2970,11 +3018,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -3006,11 +3050,7 @@
      "Fn::Join": [
       "",
       [
-       "arn:aws:execute-api:us-east-1:",
-       {
-        "Ref": "AWS::AccountId"
-       },
-       ":",
+       "arn:aws:execute-api:us-east-1:381491991730:",
        {
         "Ref": "JarvisApi93403720"
        },
@@ -3086,7 +3126,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/+0aXW/bNvC3lI8Fq61J9+I31027oEnj2c6AwTACWjzLl1CkRlJJVMH/fSApynLTpusXmrgCEoi6I++Td9QdfZAc/PEi+f0JuzHPUn71TOAyqaeWpVeU3ZiL2hwm9csyvQI7r8nSD96xHMiAPCWUaMjVNRNjJTCtyIBwMFarilDCSqtegQALZ8tLSK0hA6tLoETgCtIqFTApBRgymNek0LDCW09yQ3dfF5SkSodpTAh1A/wU7FpxByLj8xmh5M3RjCxoRJ9pzFCaRsAG+CcwDjoCc3Y7zKBh4DgyzkdKGyfRj+NEPeQpiRxPuoa4a4evnL2go5VsHZbjLUoyIF3vOreaw8SjTBKmDu94a7OgARV82zo/uqXl0uL/L6+wYGqZhRxkl9VLZmDeaNL9X2wosjypW1ZmuzhuGsZ5h+RgXjeetZal65maKG+11qAfAztuX7biE2y/G6HvAn40aj0ss/0E8KMwwA8W0meWEOjUUXHZ2JgyB/6yIgOX9VCmWDAxTFNVShuzr5/jFgxTi0qGvNAwmal4QHU4z9Q4krqD9VocS4ESWtyuip9CfrWo7qyQLAPuaWJzMnZh1VDL3TPrx6hwP91vwGoloPPt0Lv1Abl17xXcP+y3hs9p10ef9VofO4/JxY/BdP6kd4JvqGD5krOkdkc/6ByNQSUd+nUpvVYbyivJcsWXST1jS/9ZYN2zc54UTFt0k9+CN5jcomxVuOHUGcYobe+fsUQhUGanijvQePjPxfhocjE5+uv8aDq7t+gtFEp7LGeYwwRSdQ26CmWvM8WDk/dhCuW3hffxhqYqk2hVUp8b0GOlxLwmZTPsCG1ArKaYyfPiSLqFPPYaDGbyWA4FMuNCoCaQMxTRJb5H8TdoXFV3ccYyyZnmQ2s1Lkvr12+cgYy5UbpNm67ulScgM7tueyL/lqjhRN2ATpmBKEwDPy+Kj8JfYYbbLkkDnFb5UglDBismjBc5BP92dx18zpTRdDQORgJB2o4lG7nLHXz3Q62069dC3XgL+lmNDaKwDjbVRWu7DCRoZmEKqXYdgyD8jjSBiYMcc5AWbeVl/ODdpzWfXlyJsKEmXQMvBehktJLT5uWNVmXRpJALqThcmuSdf8TsMa/Jqhl2e1eltNi+rZnkAnTzBtI644aQ0Mq1RCZKxZzLoTAnKr16jQLGrHW8o6bKOCmHXOlqiu+hpXmNWkmnSQNZlpK7IPG779aClkycKh76YoEISr87m+2sSp3CKdtaOg3h5Vsgd//2U+u9Vax3514p9jl39k59hIr1MbpXiv2i7lxQc3jBjAFrkqF7UKEyk9QnKvNfU/OaiGbYKu6s8d2B/pswct1QVmDGLNywKqknYOywwHlNdBh1XMDBpBqLtt51kBUrhXW3eGMNK4HZ2p75Cf6r1V/OfeS+rr3h24K6F3ibpkgNAtBXUAhV5eHr+a4MrMC2BLAM5Xb6zjXVTJ2oDFMmjvkHjYAe3sP3Ae6DZrv76dSyDHzIRFAn+j2STiAkqXgFvKAhNEP4e1RMuNYWAdcAUFrINOsEouoEfmnXSuN7l6G7b8dxdQT59bPQwPANNFbgW6gmoQ7nTRH7qfkubTuRJmAKJU3Tb3PX1KUZxRPG5YWAHjPNcrBtmlm0PdkdKl9KhPbG+jnGus84vVf6LfwIjNVv4V/aK737e/f37u/d/zMZ+XIg0G3rAfc7V6a3rY+C2fWYadsW1A8QG3sGXgE6CneY8eLLDFtzhDpntJJb0GZDR6WxKm/1j3O29HbwY62ukYN2dRP1rRxXT6HMaJdC+0NaR+mstEVpN9RdlSWX5rfrgxfJ88Pk+ZNLg/is6W4lk/D8D1kV5fQfLgAA"
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/+0aXW/bNvC3lI8Dq61J9+I31027oEnj2c6AwTACWjzLl1CkRlJJVMH/fSApynLTJusXGmcCEoi6I++Td9QdfZAc/P4y+e0ZuzHPU371XOAyqaeWpVeU3ZiL2hwm9asyvQI7r8nSD96zHMiA/EIo0ZCraybGSmBakQHhYKxWFaGElVa9BgEWzpaXkFpDBlaXQInAFaRVKmBSCjBkMK9JoWGFt57khu6+LihJlQ7TmBDqBvgp2LXiDkTG5zNCydujGVnQiD7TmKE0jYAN8A9gHHQE5ux2mEHDwHFknI+UNk6iH8eJesgvJHI86Rrirh2+cvaCjlaydViOtyjJgHS969xqDhOPMkmYOrzjrc2CBlTwbev86JaWS4v/r7zCgqllFnKQXVavmIF5o0n3f7GhyPKkblmZ7eK4aRjnHZKDed141lqWrmdqorzVWoN+Cuy4fdmKz7D9boS+C3hv1HpcZvsJ4L0wwA8W0meWEOjUUXHZ2JgyB/6qIgOX9VCmWDAxTFNVShuzr5/jFgxTi0qGvNAwmal4QHU4z9Q4krqD9VocS4ESWtyuip9DfrWo7qyQLAPuaWJzMnZh1VDL3TPrx6hwP91vwGoloPPt0Lv1Ebn1ySv49LDfGj6nXR896LU+dvbJxftgOn/SO8E3VLB8yVlSu6MfdI7GoJIO/aaUXqsN5ZVkueLLpJ6xpf8ssO7ZOU8Kpi26ye/AG0xuUbYq3HDqDGOUtvfPWKIQKLNTxR1oPPz7Ynw0uZgc/Xl+NJ3dW/QWCqU9ljPMYQKpugZdhbLXmeLRyfs4hfLbwvt4Q1OVSbQqqc8N6LFSYl6Tshl2hDYgVlPM5HlxJN1CHnsNBjN5LIcCmXEhUBPIGYroEt+j+As0rqq7OGOZ5EzzobUal6X16zfOQMbcKN2mTVf3yhOQmV23PZF/StRwom5Ap8xAFKaBnxfFJ+GvMcNtl6QBTqt8qYQhgxUTxoscgn+7uw4eMmU0HY2DkUCQtmPJRu5yB9/9UCvt+o1QN96CflZjgyisg0110douAwmaWZhCql3HIAi/I01g4iDHHKRFW3kZP3r3ac2nF1cibKhJ18BLAToZreS0eXmrVVk0KeRCKg6XJnnvHzF7zGuyaobd3lUpLbZvaya5AN28gbTOuCEktHItkYlSMedyKMyJSq/eoIAxax3vqKkyTsohV7qa4gdoaV6jVtJp0kCWpeQuSPzuu7WgJROnioe+WCCC0u/OZjurUqdwyraWTkN4+RbI3b+nqfWTVax355NS7CF39k7dQ8X6GH1Siv1P3bmg5vCCGQPWJEP3oEJlJqlPVOa/puY1Ec2wVdxZ47sD/Tdh5LqhrMCMWbhhVVJPwNhhgfOa6DDquICDSTUWbb3rICtWCutu8cYaVgKztT3zE/xXq7+c+8R9XXvDtwV1L/A2TZEaBKCvoRCqysPX810ZWIFtCWAZyu30nWuqmTpRGaZMHPOPGgE9vIf38IfhPii30UWnlmXgQzKCOtnFI+kEQhKMV8wLGkI/pBePignd2iLgGgBKC5lmnUBXncRS2rXS+MGdAN2347g6gvz6WWiQ+AYdK/AdVJNQ5/OmSP7cfHcsOJEmYAolTdPPc9fgpRnFE8zlnYAeM81ysG0aW7Q93x0qX0qE9sb6Oca6zzi9V/otvAfG6rdw75XeK4/MK737e/f37u/d/zMZ+SIt0G2rNPfrZqa3Da+C2fWY6aaso3uIjX0krx4dhXvteBlqhq2xQm06WsktaLOho9JYlbfWiXO29HbwY62ukYN2tS717T1XA6PMaJdC++NqR+mstEVpN9RdnyaX5tfrg5fJi8PkxbNLg/i86Xgmk/D8Fzq+CgczMAAA"
    },
    "Metadata": {
     "aws:cdk:path": "JarvisStack/CDKMetadata/Default"

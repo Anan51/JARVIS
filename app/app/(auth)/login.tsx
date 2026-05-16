@@ -11,22 +11,29 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function handleLogin() {
+    setErrorMessage('');
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+      setErrorMessage('Please fill in all fields');
       return;
     }
     setLoading(true);
     try {
       const result = await login(email.trim(), password);
       if (result.isSignedIn) {
-        router.replace('/(tabs)');
+        if (Platform.OS === 'web') {
+          window.location.replace('/');
+        } else {
+          router.replace('/(tabs)');
+        }
       } else if (result.nextStep?.signInStep === 'CONFIRM_SIGN_UP') {
-        router.push({ pathname: '/(auth)/confirm', params: { email: email.trim() } });
+        router.push({ pathname: '/(auth)/confirm', params: { email: email.trim(), password } });
       }
     } catch (err: any) {
-      Alert.alert('Login Failed', err.message || 'Invalid credentials');
+      console.error('Login error:', err);
+      setErrorMessage(err.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -43,6 +50,8 @@ export default function LoginScreen() {
           <Text style={s.appName}>JARVIS</Text>
           <Text style={s.subtitle}>Your AI Voice Assistant</Text>
         </View>
+
+        {errorMessage ? <Text style={s.errorText}>{errorMessage}</Text> : null}
 
         {/* Form */}
         <View style={s.form}>
@@ -97,6 +106,7 @@ const s = StyleSheet.create({
   logoCircle: { width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   appName: { fontSize: 36, fontWeight: '700', color: theme.colors.textPrimary, letterSpacing: 4 },
   subtitle: { fontSize: 14, color: theme.colors.textSecondary, marginTop: 4 },
+  errorText: { color: theme.colors.danger, marginBottom: 16, textAlign: 'center', fontSize: 14 },
   form: { gap: 16 },
   inputContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.surfaceElevated, borderRadius: 12, borderWidth: 1, borderColor: theme.colors.border, paddingHorizontal: 16, height: 52 },
   inputIcon: { marginRight: 12 },

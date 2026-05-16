@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, Switch, Platform, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -14,22 +14,24 @@ export default function SettingsScreen() {
   const { hasPermission: contactsPermission, requestPermission: requestContacts } = useContacts();
   const [notificationsEnabled, setNotificationsEnabled] = useState(!!expoPushToken);
 
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+
   useEffect(() => {
-    getUser().then(setUser).catch(() => {});
+    getUser().then(setUser).catch(() => { });
   }, []);
 
-  async function handleLogout() {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Sign Out',
-        style: 'destructive',
-        onPress: async () => {
-          await logout();
-          router.replace('/(auth)/login');
-        },
-      },
-    ]);
+  function handleLogout() {
+    setLogoutModalVisible(true);
+  }
+
+  async function confirmLogout() {
+    setLogoutModalVisible(false);
+    await logout();
+    if (Platform.OS === 'web') {
+      window.location.replace('/');
+    } else {
+      router.replace('/(auth)/login');
+    }
   }
 
   async function handleContactsPermission() {
@@ -44,11 +46,11 @@ export default function SettingsScreen() {
       {/* User Card */}
       <View style={[s.card, s.userCard]}>
         <LinearGradient colors={[theme.colors.primaryStart, theme.colors.primaryEnd]} style={s.avatar}>
-          <Text style={s.avatarText}>{user?.username?.[0]?.toUpperCase() || 'J'}</Text>
+          <Text style={s.avatarText}>{user?.attributes?.name?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase() || 'J'}</Text>
         </LinearGradient>
         <View style={s.userInfo}>
-          <Text style={s.userName}>{user?.username || 'Loading...'}</Text>
-          <Text style={s.userEmail}>{user?.signInDetails?.loginId || ''}</Text>
+          <Text style={s.userName}>{user?.attributes?.name || user?.username || 'Loading...'}</Text>
+          <Text style={s.userEmail}>{user?.attributes?.email || user?.signInDetails?.loginId || ''}</Text>
         </View>
       </View>
 
@@ -85,6 +87,24 @@ export default function SettingsScreen() {
         <Ionicons name="log-out-outline" size={20} color={theme.colors.danger} />
         <Text style={s.logoutText}>Sign Out</Text>
       </TouchableOpacity>
+
+      {/* Logout Modal */}
+      <Modal visible={logoutModalVisible} transparent animationType="fade" onRequestClose={() => setLogoutModalVisible(false)}>
+        <View style={s.modalOverlay}>
+          <View style={s.modalContent}>
+            <Text style={s.modalTitle}>Sign Out</Text>
+            <Text style={s.modalText}>Are you sure you want to sign out?</Text>
+            <View style={s.modalButtons}>
+              <TouchableOpacity onPress={() => setLogoutModalVisible(false)} style={[s.modalButton, s.modalButtonCancel]}>
+                <Text style={s.modalButtonTextCancel}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirmLogout} style={[s.modalButton, s.modalButtonConfirm]}>
+                <Text style={s.modalButtonTextConfirm}>Sign Out</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -125,4 +145,14 @@ const s = StyleSheet.create({
   grantText: { color: theme.colors.primary, fontSize: 13, fontWeight: '600' },
   logoutButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, backgroundColor: theme.colors.dangerMuted, borderRadius: 12, marginTop: 8 },
   logoutText: { color: theme.colors.danger, fontSize: 16, fontWeight: '600' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: theme.colors.surfaceElevated, borderRadius: 16, padding: 24, width: '80%', maxWidth: 340, borderWidth: 1, borderColor: theme.colors.border },
+  modalTitle: { fontSize: 20, fontWeight: '700', color: theme.colors.textPrimary, marginBottom: 8, textAlign: 'center' },
+  modalText: { fontSize: 14, color: theme.colors.textSecondary, marginBottom: 24, textAlign: 'center' },
+  modalButtons: { flexDirection: 'row', gap: 12 },
+  modalButton: { flex: 1, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  modalButtonCancel: { backgroundColor: theme.colors.surface },
+  modalButtonConfirm: { backgroundColor: theme.colors.danger },
+  modalButtonTextCancel: { color: theme.colors.textPrimary, fontSize: 15, fontWeight: '600' },
+  modalButtonTextConfirm: { color: '#fff', fontSize: 15, fontWeight: '600' },
 });

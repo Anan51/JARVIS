@@ -10,6 +10,7 @@ import {
   confirmSignUp,
   getCurrentUser,
   fetchAuthSession,
+  fetchUserAttributes,
   resendSignUpCode,
 } from 'aws-amplify/auth';
 import { config } from '../constants/config';
@@ -68,7 +69,9 @@ export async function getAuthToken(): Promise<string> {
 
 export async function getUser() {
   try {
-    return await getCurrentUser();
+    const user = await getCurrentUser();
+    const attributes = await fetchUserAttributes();
+    return { ...user, attributes };
   } catch {
     return null;
   }
