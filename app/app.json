@@ -18,7 +18,12 @@
       "bundleIdentifier": "com.jarvis.voiceassistant",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "JARVIS needs microphone access to record voice memos.",
-        "NSContactsUsageDescription": "JARVIS needs contacts access to send messages to your contacts."
+        "NSContactsUsageDescription": "JARVIS needs contacts access to send messages to your contacts.",
+        "UIBackgroundModes": [
+          "remote-notification",
+          "remote-notification"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -35,7 +40,9 @@
         "VIBRATE",
         "RECEIVE_BOOT_COMPLETED",
         "SCHEDULE_EXACT_ALARM",
-        "com.android.alarm.permission.SET_ALARM"
+        "com.android.alarm.permission.SET_ALARM",
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS"
       ]
     },
     "web": {
@@ -57,6 +64,12 @@
           "contactsPermission": "JARVIS needs access to your contacts to send messages."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "32032c54-e5a2-4bbc-9ace-cbfaeeb343f8"
+      }
+    }
   }
 }

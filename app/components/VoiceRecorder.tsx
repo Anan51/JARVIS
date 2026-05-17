@@ -1,6 +1,6 @@
 // ==========================================
 // JARVIS — Voice Recorder Component
-// Main recording interface with waveform and status
+// Sci-fi HUD recording interface
 // ==========================================
 
 import React from 'react';
@@ -11,21 +11,24 @@ import {
   StyleSheet,
   ActivityIndicator,
   TextInput,
+  Dimensions,
+  Animated,
   Platform,
+  Modal
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useAudioRecorder, RecordingState } from '../hooks/useAudioRecorder';
+import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { WaveformVisualizer } from './WaveformVisualizer';
+import { HudOverlay } from './HudOverlay';
 import { theme } from '../constants/theme';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface VoiceRecorderProps {
   onProcessingComplete?: (result: any) => void;
 }
 
 export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
-  const insets = useSafeAreaInsets();
   const {
     state,
     duration,
@@ -40,6 +43,7 @@ export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
   } = useAudioRecorder();
 
   const [editedTranscript, setEditedTranscript] = React.useState('');
+  const glowAnim = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
     if (state === 'pending_confirmation' && result?.transcript) {
@@ -53,281 +57,363 @@ export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
     }
   }, [state, result, onProcessingComplete]);
 
+  React.useEffect(() => {
+    const anim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowAnim, { toValue: 1, duration: 1500, useNativeDriver: false }),
+        Animated.timing(glowAnim, { toValue: 0, duration: 1500, useNativeDriver: false }),
+      ])
+    );
+    anim.start();
+    return () => anim.stop();
+  }, []);
+
   const formatDuration = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getStatusText = (): string => {
-    switch (state) {
-      case 'idle':
-        return 'Tap to start recording';
-      case 'recording':
-        return 'Recording... Tap to stop';
-      case 'uploading':
-      case 'processing':
-        return processingStatus || 'Processing...';
-      case 'complete':
-        return 'Processing complete!';
-      case 'error':
-        return error || 'An error occurred';
-      default:
-        return '';
-    }
-  };
-
-  const getStatusColor = (): string => {
-    switch (state) {
-      case 'recording':
-        return theme.colors.danger;
-      case 'complete':
-        return theme.colors.success;
-      case 'error':
-        return theme.colors.danger;
-      default:
-        return theme.colors.textSecondary;
-    }
-  };
-
   const isProcessing = state === 'uploading' || state === 'processing';
+  const isRecording = state === 'recording';
+
+  const glowShadowRadius = glowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [15, 35],
+  });
+  const glowShadowOpacity = glowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.4, 0.9],
+  });
 
   return (
     <View style={styles.container}>
-      {/* Waveform */}
-      <View style={styles.waveformContainer}>
-        <WaveformVisualizer
-          metering={metering}
-          isActive={state === 'recording'}
-        />
-      </View>
+      {/* HUD rings overlay */}
+      <HudOverlay isRecording={isRecording} />
 
-      {/* Duration */}
-      {(state === 'recording' || state === 'idle') && (
-        <Text style={styles.duration}>{formatDuration(duration)}</Text>
-      )}
+      {/* Central content — mic + circular waveform + timer */}
+      <View style={styles.centerContent}>
+        {/* Circular waveform around the mic */}
+        <WaveformVisualizer metering={metering} isActive={isRecording} />
 
-      {/* Status */}
-      <Text style={[styles.statusText, { color: getStatusColor() }]}>
-        {getStatusText()}
-      </Text>
-
-      {/* Record Button */}
-      <View style={styles.buttonContainer}>
-        {state === 'idle' && (
+        {/* Mic button */}
+        {(state === 'idle' || state === 'recording') && (
           <TouchableOpacity
-            onPress={startRecording}
+            onPress={isRecording ? stopRecording : startRecording}
             activeOpacity={0.7}
-            style={styles.recordButtonOuter}
+            style={styles.micTouchArea}
           >
-            <LinearGradient
-              colors={[theme.colors.primaryStart, theme.colors.primaryEnd]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.recordButton}
+            <Animated.View
+              style={[
+                styles.micIconContainer,
+                isRecording && styles.micIconRecording,
+                { shadowRadius: glowShadowRadius, shadowOpacity: glowShadowOpacity },
+              ]}
             >
-              <Ionicons name="mic" size={40} color="#fff" />
-            </LinearGradient>
+              <Ionicons
+                name={isRecording ? 'stop' : 'mic'}
+                size={36}
+                color={isRecording ? '#ff4444' : theme.colors.primary}
+              />
+            </Animated.View>
           </TouchableOpacity>
         )}
 
-        {state === 'recording' && (
-          <TouchableOpacity
-            onPress={stopRecording}
-            activeOpacity={0.7}
-            style={styles.recordButtonOuter}
-          >
-            <View style={[styles.recordButton, styles.stopButton]}>
-              <Ionicons name="stop" size={36} color="#fff" />
-            </View>
-          </TouchableOpacity>
+        {/* Timer between inner and outer circle */}
+        {(state === 'idle' || state === 'recording') && (
+          <Text style={[styles.timerInner, isRecording && styles.timerInnerRecording]}>
+            {formatDuration(duration)}
+          </Text>
         )}
-
         {isProcessing && (
           <View style={styles.processingContainer}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>
         )}
+      </View>
 
-        {state === 'pending_confirmation' && (
-          <View style={styles.confirmationContainer}>
-            <Text style={styles.confirmationTitle}>Did you mean:</Text>
-            <TextInput
-              style={styles.transcriptInput}
-              value={editedTranscript}
-              onChangeText={setEditedTranscript}
-              multiline
-            />
-            <View style={styles.confirmationActions}>
-              <TouchableOpacity onPress={reset} style={[styles.confirmBtn, styles.cancelBtn]}>
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => {
-                confirmTranscript(editedTranscript, {
-                  userTime: new Date().toISOString(),
-                  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-                });
-              }} style={styles.confirmBtn}>
-                <Text style={styles.confirmText}>Confirm</Text>
+
+
+      {/* TAP TO SPEAK */}
+      {state === 'idle' && (
+        <Text style={styles.tapLabel}>TAP TO SPEAK</Text>
+      )}
+      {state === 'recording' && (
+        <Text style={[styles.tapLabel, styles.tapLabelRecording]}>TAP TO STOP</Text>
+      )}
+
+      {/* Processing status */}
+      {isProcessing && (
+        <Text style={styles.processingStatusText}>
+          {processingStatus || 'Processing...'}
+        </Text>
+      )}
+
+      {/* Confirmation UI */}
+      {/* Replace the existing pending_confirmation block entirely */}
+      {state === 'pending_confirmation' && (
+        <Modal visible transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              {/* HUD corner brackets */}
+              <View style={[styles.corner, styles.cornerTL]} />
+              <View style={[styles.corner, styles.cornerTR]} />
+              <View style={[styles.corner, styles.cornerBL]} />
+              <View style={[styles.corner, styles.cornerBR]} />
+
+              <Text style={styles.modalLabel}>TRANSCRIPT RECEIVED:</Text>
+
+              <TextInput
+                style={styles.modalInput}
+                value={editedTranscript}
+                onChangeText={setEditedTranscript}
+                multiline
+                scrollEnabled
+              />
+
+              <View style={styles.modalActions}>
+                <TouchableOpacity onPress={reset} style={[styles.modalBtn, styles.modalBtnCancel]} activeOpacity={0.7}>
+                  <Text style={styles.modalBtnTextCancel}>CANCEL</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => confirmTranscript(editedTranscript, {
+                    userTime: new Date().toISOString(),
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                  })}
+                  style={[styles.modalBtn, styles.modalBtnConfirm]}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.modalBtnTextConfirm}>CONFIRM</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
+
+      {/* Result summary */}
+      {state === 'complete' && result?.intents && (
+        <Modal visible transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <View style={[styles.corner, styles.cornerTL]} />
+              <View style={[styles.corner, styles.cornerTR]} />
+              <View style={[styles.corner, styles.cornerBL]} />
+              <View style={[styles.corner, styles.cornerBR]} />
+
+              <Text style={styles.modalLabel}>ACTIONS DETECTED:</Text>
+
+              {result.intents.map((intent, i) => (
+                <View key={i} style={styles.intentRow}>
+                  <Ionicons
+                    name={
+                      intent.type === 'alarm' ? 'alarm' :
+                        intent.type === 'reminder' ? 'notifications' :
+                          intent.type === 'message' ? 'chatbubble' :
+                            'checkmark-circle'
+                    }
+                    size={16}
+                    color="#00f2fe"
+                  />
+                  <Text style={styles.intentRowText} numberOfLines={1}>
+                    {intent.title}
+                  </Text>
+                </View>
+              ))}
+
+              <TouchableOpacity
+                onPress={reset}
+                style={[styles.modalBtn, styles.modalBtnConfirm, { marginTop: 20, flex: 0, paddingVertical: 14 }]}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.modalBtnTextConfirm}>RECORD ANOTHER MEMO</Text>
               </TouchableOpacity>
             </View>
           </View>
-        )}
-      </View>
+        </Modal>
+      )}
 
-      {/* Result summary */}
-      {
-        state === 'complete' && result?.intents && (
-          <View style={styles.resultSummary}>
-            <Text style={styles.resultTitle}>
-              {result.intents.length} action{result.intents.length !== 1 ? 's' : ''} detected
-            </Text>
-            {result.intents.map((intent, i) => (
-              <View key={i} style={styles.intentPreview}>
-                <Ionicons
-                  name={
-                    intent.type === 'alarm'
-                      ? 'alarm'
-                      : intent.type === 'reminder'
-                        ? 'notifications'
-                        : intent.type === 'message'
-                          ? 'chatbubble'
-                          : 'checkmark-circle'
-                  }
-                  size={16}
-                  color={theme.colors.primary}
-                />
-                <Text style={styles.intentText} numberOfLines={1}>
-                  {intent.title}
-                </Text>
-              </View>
-            ))}
-            <TouchableOpacity onPress={reset} style={[styles.confirmBtn, { marginTop: theme.spacing.lg }]}>
-              <Text style={styles.confirmText}>Record Another Memo</Text>
-            </TouchableOpacity>
-          </View>
-        )
-      }
-    </View >
+      {/* Error */}
+      {state === 'error' && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error || 'An error occurred'}</Text>
+          <TouchableOpacity onPress={reset} style={styles.modalBtnConfirm}>
+            <Text style={styles.modalBtnTextConfirm}>RETRY</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    paddingVertical: theme.spacing.xl,
-  },
-  waveformContainer: {
-    width: '100%',
-    marginBottom: theme.spacing.lg,
-  },
-  duration: {
-    ...theme.typography.h1,
-    color: theme.colors.textPrimary,
-    fontVariant: ['tabular-nums'],
-    marginBottom: theme.spacing.sm,
-  },
-  statusText: {
-    ...theme.typography.bodySmall,
-    marginBottom: theme.spacing.xl,
-    textAlign: 'center',
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 100,
-  },
-  recordButtonOuter: {
-    ...theme.shadows.glow,
-    backgroundColor: 'transparent',
-    borderRadius: 44,
-    width: 88,
-    height: 88,
-  },
-  recordButton: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stopButton: {
-    backgroundColor: theme.colors.danger,
-  },
-  processingContainer: {
-    width: 88,
-    height: 88,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  resultSummary: {
-    marginTop: theme.spacing.xl,
-    width: '100%',
-    backgroundColor: theme.colors.surfaceElevated,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  resultTitle: {
-    ...theme.typography.label,
-    color: theme.colors.success,
-    marginBottom: theme.spacing.sm,
-  },
-  intentPreview: {
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+
+  intentRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.sm,
-    paddingVertical: theme.spacing.xs,
+    gap: 8,
+    paddingVertical: 6,
   },
-  intentText: {
-    ...theme.typography.bodySmall,
-    color: theme.colors.textPrimary,
+  intentRowText: {
+    color: '#00f2fe',
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    fontSize: 13,
     flex: 1,
   },
-  confirmationContainer: {
-    width: '100%',
-    paddingHorizontal: theme.spacing.lg,
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  confirmationTitle: {
-    ...theme.typography.label,
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.sm,
-  },
-  transcriptInput: {
-    backgroundColor: theme.colors.surfaceGlass,
+  modalCard: {
+    width: '80%',
+    backgroundColor: '#0a1a2e',
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: theme.colors.borderFocus,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.md,
-    color: theme.colors.primary,
-    ...theme.typography.body,
-    minHeight: 80,
-    marginBottom: theme.spacing.md,
+    borderColor: 'rgba(0, 242, 254, 0.3)',
+    padding: 24,
+    position: 'relative',
+  },
+  corner: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    borderColor: '#00f2fe',
+    borderStyle: 'solid',
+  },
+  cornerTL: { top: -1, left: -1, borderTopWidth: 2, borderLeftWidth: 2 },
+  cornerTR: { top: -1, right: -1, borderTopWidth: 2, borderRightWidth: 2 },
+  cornerBL: { bottom: -1, left: -1, borderBottomWidth: 2, borderLeftWidth: 2 },
+  cornerBR: { bottom: -1, right: -1, borderBottomWidth: 2, borderRightWidth: 2 },
+  modalLabel: {
+    fontSize: 10,
+    letterSpacing: 2,
+    color: 'rgba(0, 242, 254, 0.6)',
+    marginBottom: 12,
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
   },
-  confirmationActions: {
-    flexDirection: 'row',
-    gap: theme.spacing.md,
-  },
-  confirmBtn: {
-    flex: 1,
-    backgroundColor: theme.colors.primary,
-    paddingVertical: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    alignItems: 'center',
-  },
-  cancelBtn: {
-    backgroundColor: theme.colors.surfaceElevated,
+  modalInput: {
+    backgroundColor: 'rgba(0, 242, 254, 0.05)',
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: 'rgba(0, 242, 254, 0.2)',
+    borderRadius: 4,
+    padding: 12,
+    color: '#00f2fe',
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    fontSize: 14,
+    minHeight: 80,
+    maxHeight: 160,
+    marginBottom: 20,
   },
-  confirmText: {
-    color: '#fff',
-    fontWeight: '600',
+  modalActions: {
+    flexDirection: 'row',
+    gap: 12,
   },
-  cancelText: {
-    color: theme.colors.textSecondary,
-    fontWeight: '600',
+  modalBtn: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 4,
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  modalBtnCancel: {
+    backgroundColor: 'transparent',
+    borderColor: theme.colors.danger,
+  },
+  modalBtnConfirm: {
+    backgroundColor: 'rgba(0, 242, 254, 0.1)',
+    borderColor: 'rgba(0, 242, 254, 0.5)',
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  modalBtnTextCancel: {
+    color: theme.colors.danger,
+    fontSize: 11,
+    letterSpacing: 2,
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+  },
+  modalBtnTextConfirm: {
+    color: '#00f2fe',
+    fontSize: 11,
+    letterSpacing: 2,
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace'
+  },
+  centerContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 220,
+    height: 260,
+    zIndex: 10,
+    position: 'relative',
+  },
+  micTouchArea: { alignItems: 'center', justifyContent: 'center' },
+  micIconContainer: {
+    width: 80, height: 80, borderRadius: 40,
+    alignItems: 'center', justifyContent: 'center',
+    flexDirection: 'column',
+    backgroundColor: 'rgba(0, 20, 30, 0.6)',
+    borderWidth: 2, borderColor: 'rgba(0, 242, 254, 0.4)',
+    shadowColor: '#00f2fe', shadowOffset: { width: 0, height: 0 },
+  },
+  micIconRecording: {
+    borderColor: 'rgba(255, 68, 68, 0.6)',
+    backgroundColor: 'rgba(40, 0, 0, 0.4)',
+    shadowColor: '#ff4444',
+  },
+  duration: {
+    fontFamily: 'Courier', fontSize: 36, fontWeight: '700',
+    color: 'rgba(0, 242, 254, 0.9)', letterSpacing: 6,
+    marginTop: 16, fontVariant: ['tabular-nums'],
+    zIndex: 10,
+  },
+  durationRecording: { color: '#ff4444' },
+
+  tapLabel: {
+    fontFamily: 'Courier', fontSize: 13, letterSpacing: 4,
+    color: 'rgba(0, 242, 254, 0.45)', marginTop: 32, zIndex: 10,
+  },
+  tapLabelRecording: { color: 'rgba(255, 68, 68, 0.6)' },
+
+  processingContainer: {
+    width: 80, height: 80, alignItems: 'center', justifyContent: 'center',
+  },
+  processingStatusText: {
+    fontFamily: 'Courier', fontSize: 12, letterSpacing: 2,
+    color: 'rgba(0, 242, 254, 0.6)', marginTop: 20, textAlign: 'center',
+  },
+  transcriptInput: {
+    backgroundColor: 'rgba(0, 20, 30, 0.6)', borderWidth: 1,
+    borderColor: 'rgba(0, 242, 254, 0.3)', borderRadius: 4,
+    padding: theme.spacing.md, color: theme.colors.primary,
+    fontFamily: 'Courier', fontSize: 14, minHeight: 80,
+    marginBottom: theme.spacing.md,
+  },
+  intentText: {
+    fontFamily: 'Courier', fontSize: 13,
+    color: 'rgba(0, 242, 254, 0.8)', flex: 1,
+  },
+
+  errorContainer: {
+    marginTop: 24, width: '100%', paddingHorizontal: 24,
+    alignItems: 'center', gap: 16, zIndex: 20,
+  },
+  errorText: {
+    fontFamily: 'Courier', fontSize: 12, letterSpacing: 1,
+    color: '#ff4444', textAlign: 'center',
+  },
+  timerInner: {
+    fontFamily: 'Courier',
+    fontSize: 20,
+    fontWeight: '700',
+    color: 'rgba(0, 242, 254, 0.9)',
+    letterSpacing: 3,
+    fontVariant: ['tabular-nums'] as any,
+    position: 'absolute',
+    bottom: 20,
+  },
+  timerInnerRecording: {
+    color: '#ff4444',
   },
 });

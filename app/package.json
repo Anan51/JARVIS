@@ -1,7 +1,7 @@
 {
   "name": "app",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.ts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -16,10 +16,11 @@
     "@react-navigation/bottom-tabs": "^7.16.1",
     "amazon-cognito-identity-js": "^6.3.16",
     "aws-amplify": "^6.17.0",
-    "expo": "~54.0.33",
+    "expo": "^55.0.24",
     "expo-av": "~16.0.8",
     "expo-constants": "~18.0.13",
     "expo-contacts": "~15.0.11",
+    "expo-dev-client": "~55.0.34",
     "expo-device": "~8.0.10",
     "expo-intent-launcher": "~13.0.8",
     "expo-linear-gradient": "~15.0.8",

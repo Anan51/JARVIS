@@ -231,6 +231,11 @@ async function registerForPushNotifications(): Promise<string | null> {
   }
 
   const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+
+  if (!projectId) {
+    console.warn('No EAS projectId found — check app.json extra.eas.projectId');
+    return null;
+  }
   const tokenData = await Notifications.getExpoPushTokenAsync({
     projectId: projectId ?? undefined,
   });

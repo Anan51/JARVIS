@@ -7,6 +7,7 @@ import { logout, getUser } from '../../services/auth';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useContacts } from '../../hooks/useContacts';
 import { theme } from '../../constants/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
   const [user, setUser] = useState<any>(null);
@@ -15,25 +16,20 @@ export default function SettingsScreen() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(!!expoPushToken);
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const insets = useSafeAreaInsets();
 
   async function handleNotificationToggle(value: boolean) {
     if (value) {
-      await requestPermission(); // this should register and get the token
+      await requestPermission();
       setNotificationsEnabled(!!expoPushToken);
-    } else {
-      // can't programmatically disable push on iOS, just update UI state
-      // and tell the user to go to Settings
-      Alert.alert(
-        'Disable Notifications',
-        'To disable notifications, go to Settings > JARVIS > Notifications.',
-      );
     }
   }
 
 
   useEffect(() => {
     getUser().then(setUser).catch(() => { });
-  }, []);
+    setNotificationsEnabled(!!expoPushToken);
+  }, [expoPushToken]);
 
   function handleLogout() {
     setLogoutModalVisible(true);
@@ -53,7 +49,7 @@ export default function SettingsScreen() {
   }
 
   return (
-    <ScrollView style={s.container} contentContainerStyle={s.content}>
+    <ScrollView style={[s.container, { paddingTop: insets.top + 10 }]} contentContainerStyle={s.content}>
       {/* User Card */}
       <View style={[s.card, s.userCard]}>
         <LinearGradient colors={[theme.colors.primaryStart, theme.colors.primaryEnd]} style={s.avatar}>

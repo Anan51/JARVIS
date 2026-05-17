@@ -7,12 +7,16 @@ import { sendSMS } from '../../services/sms';
 import { theme } from '../../constants/theme';
 import { Task } from '../../types';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TasksScreen() {
   const { tasks, loading, error, refresh, removeTask, completeTask } = useTasks();
   const [showCompleted, setShowCompleted] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
+
+  const insets = useSafeAreaInsets();
+
 
   useFocusEffect(
     useCallback(() => {
@@ -78,7 +82,7 @@ export default function TasksScreen() {
   }
 
   return (
-    <View style={s.container}>
+    <View style={[s.container, { paddingTop: insets.top + 10 }]}>
       <FlatList
         data={activeTasks}
         keyExtractor={(item) => item.taskId}
