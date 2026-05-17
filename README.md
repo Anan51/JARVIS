@@ -7,7 +7,6 @@ A serverless, AI-powered voice assistant mobile app built with React Native (Exp
 - **🎙️ Voice Recording** — Record voice memos that are automatically transcribed and analyzed
 - **⏰ Smart Alarms** — "Set an alarm for 7am" → schedules a device notification
 - **📌 Reminders** — "Remind me to finish the report by 5pm" → creates a timed reminder
-- **💬 SMS Messages** — "Text Mom that I'll be late" → opens native SMS with pre-filled message
 - **✅ Task Lists** — "Add buy groceries to my list" → creates and tracks tasks
 - **🔔 Push Notifications** — Remote notifications for reminders via Expo Push
 - **🔐 Authentication** — Secure sign-up/sign-in with AWS Cognito
@@ -25,7 +24,6 @@ A serverless, AI-powered voice assistant mobile app built with React Native (Exp
 | **Storage** | S3 (audio) + DynamoDB (tasks) |
 | **Scheduling** | EventBridge Scheduler |
 | **Notifications** | Expo Push + Local Notifications |
-| **SMS** | Native device SMS via expo-sms |
 | **Infrastructure** | AWS CDK v2 (TypeScript) |
 
 ## Prerequisites
