@@ -25,6 +25,7 @@ interface UseNotificationsReturn {
   expoPushToken: string | null;
   notification: Notifications.Notification | null;
   error: string | null;
+  requestPermission: () => Promise<string | null>;
   scheduleLocalAlarm: (title: string, body: string, triggerDate: Date) => Promise<string>;
   scheduleLocalReminder: (title: string, body: string, triggerDate: Date) => Promise<string>;
   cancelNotification: (id: string) => Promise<void>;
@@ -183,10 +184,27 @@ export function useNotifications(): UseNotificationsReturn {
     await Notifications.cancelScheduledNotificationAsync(id);
   }, []);
 
+  const requestPermission = useCallback(async (): Promise<string | null> => {
+    try {
+      const token = await registerForPushNotifications();
+      if (token) {
+        setExpoPushToken(token);
+        await registerPushToken(token, Platform.OS).catch((err) => {
+          console.error('Failed to register push token with backend:', err);
+        });
+      }
+      return token;
+    } catch (err) {
+      setError((err as Error).message);
+      return null;
+    }
+  }, []);
+
   return {
     expoPushToken,
     notification,
     error,
+    requestPermission,
     scheduleLocalAlarm,
     scheduleLocalReminder,
     cancelNotification,

@@ -17,6 +17,7 @@ export default function TasksScreen() {
   useFocusEffect(
     useCallback(() => {
       refresh();
+      return undefined;
     }, [refresh])
   );
 
@@ -137,22 +138,24 @@ export default function TasksScreen() {
       />
 
       {/* Delete Modal */}
-      <Modal visible={deleteModalVisible} transparent animationType="fade" onRequestClose={() => setDeleteModalVisible(false)}>
-        <View style={s.modalOverlay}>
-          <View style={s.modalContent}>
-            <Text style={s.modalTitle}>Delete Task</Text>
-            <Text style={s.modalText}>Are you sure you want to delete "{taskToDelete?.title}"?</Text>
-            <View style={s.modalButtons}>
-              <TouchableOpacity onPress={() => setDeleteModalVisible(false)} style={[s.modalButton, s.modalButtonCancel]}>
-                <Text style={s.modalButtonTextCancel}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={confirmDelete} style={[s.modalButton, s.modalButtonConfirm]}>
-                <Text style={s.modalButtonTextConfirm}>Delete</Text>
-              </TouchableOpacity>
+      {deleteModalVisible && (
+        <Modal visible transparent animationType="fade" onRequestClose={() => setDeleteModalVisible(false)}>
+          <View style={s.modalOverlay}>
+            <View style={s.modalContent}>
+              <Text style={s.modalTitle}>Delete Task</Text>
+              <Text style={s.modalText}>Are you sure you want to delete "{taskToDelete?.title}"?</Text>
+              <View style={s.modalButtons}>
+                <TouchableOpacity onPress={() => setDeleteModalVisible(false)} style={[s.modalButton, s.modalButtonCancel]}>
+                  <Text style={s.modalButtonTextCancel}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={confirmDelete} style={[s.modalButton, s.modalButtonConfirm]}>
+                  <Text style={s.modalButtonTextConfirm}>Delete</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      )}
     </View>
   );
 }

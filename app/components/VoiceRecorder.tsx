@@ -18,12 +18,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useAudioRecorder, RecordingState } from '../hooks/useAudioRecorder';
 import { WaveformVisualizer } from './WaveformVisualizer';
 import { theme } from '../constants/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface VoiceRecorderProps {
   onProcessingComplete?: (result: any) => void;
 }
 
 export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
+  const insets = useSafeAreaInsets();
   const {
     state,
     duration,
@@ -174,34 +176,39 @@ export function VoiceRecorder({ onProcessingComplete }: VoiceRecorderProps) {
       </View>
 
       {/* Result summary */}
-      {state === 'complete' && result?.intents && (
-        <View style={styles.resultSummary}>
-          <Text style={styles.resultTitle}>
-            {result.intents.length} action{result.intents.length !== 1 ? 's' : ''} detected
-          </Text>
-          {result.intents.map((intent, i) => (
-            <View key={i} style={styles.intentPreview}>
-              <Ionicons
-                name={
-                  intent.type === 'alarm'
-                    ? 'alarm'
-                    : intent.type === 'reminder'
-                      ? 'notifications'
-                      : intent.type === 'message'
-                        ? 'chatbubble'
-                        : 'checkmark-circle'
-                }
-                size={16}
-                color={theme.colors.primary}
-              />
-              <Text style={styles.intentText} numberOfLines={1}>
-                {intent.title}
-              </Text>
-            </View>
-          ))}
-        </View>
-      )}
-    </View>
+      {
+        state === 'complete' && result?.intents && (
+          <View style={styles.resultSummary}>
+            <Text style={styles.resultTitle}>
+              {result.intents.length} action{result.intents.length !== 1 ? 's' : ''} detected
+            </Text>
+            {result.intents.map((intent, i) => (
+              <View key={i} style={styles.intentPreview}>
+                <Ionicons
+                  name={
+                    intent.type === 'alarm'
+                      ? 'alarm'
+                      : intent.type === 'reminder'
+                        ? 'notifications'
+                        : intent.type === 'message'
+                          ? 'chatbubble'
+                          : 'checkmark-circle'
+                  }
+                  size={16}
+                  color={theme.colors.primary}
+                />
+                <Text style={styles.intentText} numberOfLines={1}>
+                  {intent.title}
+                </Text>
+              </View>
+            ))}
+            <TouchableOpacity onPress={reset} style={[styles.confirmBtn, { marginTop: theme.spacing.lg }]}>
+              <Text style={styles.confirmText}>Record Another Memo</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+    </View >
   );
 }
 
@@ -232,6 +239,10 @@ const styles = StyleSheet.create({
   },
   recordButtonOuter: {
     ...theme.shadows.glow,
+    backgroundColor: 'transparent',
+    borderRadius: 44,
+    width: 88,
+    height: 88,
   },
   recordButton: {
     width: 88,

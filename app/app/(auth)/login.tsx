@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { login } from '../../services/auth';
 import { theme } from '../../constants/theme';
+
+
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -23,11 +25,7 @@ export default function LoginScreen() {
     try {
       const result = await login(email.trim(), password);
       if (result.isSignedIn) {
-        if (Platform.OS === 'web') {
-          window.location.replace('/');
-        } else {
-          router.replace('/(tabs)');
-        }
+        router.replace('/(tabs)');
       } else if (result.nextStep?.signInStep === 'CONFIRM_SIGN_UP') {
         router.push({ pathname: '/(auth)/confirm', params: { email: email.trim(), password } });
       }

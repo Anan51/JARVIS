@@ -12,8 +12,10 @@ interface Props {
 }
 
 export function ProcessingOverlay({ visible, intents, currentIndex, currentAction }: Props) {
+  if (!visible) return null;
+
   return (
-    <Modal transparent visible={visible} animationType="fade" statusBarTranslucent>
+    <Modal transparent visible animationType="fade" statusBarTranslucent>
       <View style={s.overlay}>
         <View style={s.card}>
           <ActivityIndicator size="large" color={theme.colors.primary} />

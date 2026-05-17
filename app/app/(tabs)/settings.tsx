@@ -10,11 +10,26 @@ import { theme } from '../../constants/theme';
 
 export default function SettingsScreen() {
   const [user, setUser] = useState<any>(null);
-  const { expoPushToken } = useNotifications();
+  const { expoPushToken, requestPermission } = useNotifications();
   const { hasPermission: contactsPermission, requestPermission: requestContacts } = useContacts();
   const [notificationsEnabled, setNotificationsEnabled] = useState(!!expoPushToken);
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+
+  async function handleNotificationToggle(value: boolean) {
+    if (value) {
+      await requestPermission(); // this should register and get the token
+      setNotificationsEnabled(!!expoPushToken);
+    } else {
+      // can't programmatically disable push on iOS, just update UI state
+      // and tell the user to go to Settings
+      Alert.alert(
+        'Disable Notifications',
+        'To disable notifications, go to Settings > JARVIS > Notifications.',
+      );
+    }
+  }
+
 
   useEffect(() => {
     getUser().then(setUser).catch(() => { });
@@ -27,11 +42,7 @@ export default function SettingsScreen() {
   async function confirmLogout() {
     setLogoutModalVisible(false);
     await logout();
-    if (Platform.OS === 'web') {
-      window.location.replace('/');
-    } else {
-      router.replace('/(auth)/login');
-    }
+    router.replace('/(auth)/login');
   }
 
   async function handleContactsPermission() {
@@ -61,9 +72,10 @@ export default function SettingsScreen() {
           icon="notifications"
           title="Push Notifications"
           subtitle={expoPushToken ? 'Registered' : 'Not registered'}
-          trailing={<Switch value={notificationsEnabled} trackColor={{ true: theme.colors.primary }} thumbColor="#fff" disabled />}
+          trailing={<Switch value={notificationsEnabled} onValueChange={handleNotificationToggle} trackColor={{ true: theme.colors.primary }} thumbColor="#fff" />}
         />
-        <View style={s.divider} />
+
+        {/* <View style={s.divider} />
         <SettingRow
           icon="people"
           title="Contacts Access"
@@ -78,8 +90,9 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             )
           }
-        />
+        /> */}
       </View>
+
 
 
       {/* Sign Out */}
@@ -89,22 +102,24 @@ export default function SettingsScreen() {
       </TouchableOpacity>
 
       {/* Logout Modal */}
-      <Modal visible={logoutModalVisible} transparent animationType="fade" onRequestClose={() => setLogoutModalVisible(false)}>
-        <View style={s.modalOverlay}>
-          <View style={s.modalContent}>
-            <Text style={s.modalTitle}>Sign Out</Text>
-            <Text style={s.modalText}>Are you sure you want to sign out?</Text>
-            <View style={s.modalButtons}>
-              <TouchableOpacity onPress={() => setLogoutModalVisible(false)} style={[s.modalButton, s.modalButtonCancel]}>
-                <Text style={s.modalButtonTextCancel}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={confirmLogout} style={[s.modalButton, s.modalButtonConfirm]}>
-                <Text style={s.modalButtonTextConfirm}>Sign Out</Text>
-              </TouchableOpacity>
+      {logoutModalVisible && (
+        <Modal visible transparent animationType="fade" onRequestClose={() => setLogoutModalVisible(false)}>
+          <View style={s.modalOverlay}>
+            <View style={s.modalContent}>
+              <Text style={s.modalTitle}>Sign Out</Text>
+              <Text style={s.modalText}>Are you sure you want to sign out?</Text>
+              <View style={s.modalButtons}>
+                <TouchableOpacity onPress={() => setLogoutModalVisible(false)} style={[s.modalButton, s.modalButtonCancel]}>
+                  <Text style={s.modalButtonTextCancel}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={confirmLogout} style={[s.modalButton, s.modalButtonConfirm]}>
+                  <Text style={s.modalButtonTextConfirm}>Sign Out</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      )}
     </ScrollView>
   );
 }

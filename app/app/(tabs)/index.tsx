@@ -7,6 +7,7 @@ import { sendSMS } from '../../services/sms';
 import { theme } from '../../constants/theme';
 import { ParsedIntent } from '../../types';
 import { MemoStatusResponse } from '../../services/api';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function RecordScreen() {
   const { scheduleLocalAlarm, scheduleLocalReminder } = useNotifications();
@@ -93,7 +94,7 @@ export default function RecordScreen() {
   }, [scheduleLocalAlarm, scheduleLocalReminder]);
 
   return (
-    <View style={s.container}>
+    <View style={s.container} pointerEvents="box-none">
       <View style={s.centerWrapper}>
         <VoiceRecorder onProcessingComplete={handleProcessingComplete} />
       </View>

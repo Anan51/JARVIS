@@ -1,9 +1,13 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { theme } from '../../constants/theme';
 
+
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
@@ -13,9 +17,9 @@ export default function TabLayout() {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.border,
           borderTopWidth: 1,
-          height: 88,
           paddingTop: 8,
-          paddingBottom: 28,
+          paddingBottom: Math.max(insets.bottom, 8),
+          height: 56 + Math.max(insets.bottom, 8),
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -35,6 +39,9 @@ export default function TabLayout() {
     >
       <Tabs.Screen
         name="index"
+        listeners={{
+          tabPress: (e) => console.log('index tab pressed'),
+        }}
         options={{
           title: 'Record',
           headerTitle: 'JARVIS',
@@ -45,6 +52,9 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="tasks"
+        listeners={{
+          tabPress: (e) => console.log('index tab pressed'),
+        }}
         options={{
           title: 'Tasks',
           headerTitle: 'My Tasks',
@@ -55,6 +65,9 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="settings"
+        listeners={{
+          tabPress: (e) => console.log('index tab pressed'),
+        }}
         options={{
           title: 'Settings',
           headerTitle: 'Settings',

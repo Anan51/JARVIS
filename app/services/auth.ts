@@ -13,7 +13,43 @@ import {
   fetchUserAttributes,
   resendSignUpCode,
 } from 'aws-amplify/auth';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
+import { Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { config } from '../constants/config';
+
+// Create a robust, platform-agnostic storage adapter
+const platformStorage = {
+  setItem: async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      window.localStorage.setItem(key, value);
+    } else {
+      await SecureStore.setItemAsync(key, value);
+    }
+  },
+  getItem: async (key: string): Promise<string | null> => {
+    if (Platform.OS === 'web') {
+      return window.localStorage.getItem(key);
+    } else {
+      return await SecureStore.getItemAsync(key);
+    }
+  },
+  removeItem: async (key: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      window.localStorage.removeItem(key);
+    } else {
+      await SecureStore.deleteItemAsync(key);
+    }
+  },
+  clear: async (): Promise<void> => {
+    if (Platform.OS === 'web') {
+      window.localStorage.clear();
+    }
+  }
+};
+
+// Override Amplify's default storage (bypasses AsyncStorage)
+cognitoUserPoolsTokenProvider.setKeyValueStorage(platformStorage);
 
 // Initialize Amplify
 export function configureAuth() {
@@ -32,7 +68,13 @@ export function configureAuth() {
 }
 
 export async function login(email: string, password: string) {
-  return signIn({ username: email, password });
+  return signIn({
+    username: email,
+    password,
+    options: {
+      authFlowType: 'USER_PASSWORD_AUTH'
+    }
+  });
 }
 
 export async function register(email: string, password: string, fullName?: string) {
